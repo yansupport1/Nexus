@@ -1,0 +1,16 @@
+Nexus-X v4.0 GitHub Remote Source
+README.md
+api/.env.example
+api/telegram.php
+assets/background.mp4
+assets/box.mp4
+assets/card.mp4
+assets/fon.ttf
+assets/logo.png
+assets/musik.mp3
+assets/start.mp3
+assets/start.mp4
+file.json
+index.html
+sketchware_asset/WebViewGatewaySource.txt
+sketchware_asset/file.json

@@ -1,0 +1,23 @@
+{
+  "app": "Nexus-X",
+  "version": "4.0.0",
+  "source_url": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/index.html",
+  "assets_base": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets",
+  "telegram_api_url": "https://YOUR-PHP-HOST.example/api/telegram.php",
+  "getkey_url": "",
+  "assets": {
+    "card.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/card.mp4",
+    "box.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/box.mp4",
+    "start.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/start.mp4",
+    "background.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/background.mp4",
+    "start.mp3": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/start.mp3",
+    "musik.mp3": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/musik.mp3",
+    "fon.ttf": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/fon.ttf",
+    "logo.png": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/logo.png"
+  },
+  "telegram": {
+    "events": ["new_user", "new_key"],
+    "token_in_client": false,
+    "chat_id_in_client": false
+  }
+}
