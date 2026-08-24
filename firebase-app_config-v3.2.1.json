@@ -1,0 +1,44 @@
+{
+  "app_name": "Nexus-X",
+  "app_status": true,
+  "require_version_node": true,
+  "latest_version": "3.2.1",
+  "update_url": "https://whatsapp.com/channel/0029VbCrRPjDDmFLQpbX6n3n",
+  "version_schema": "v3.2.1",
+  "disabled_versions": [],
+  "versions": {
+    "v3_1": {
+      "enabled": false,
+      "version_label": "3.1",
+      "update_url": "https://whatsapp.com/channel/0029VbCrRPjDDmFLQpbX6n3n",
+      "update_title": "Update APK Diperlukan",
+      "update_message": "Versi 3.1 sudah dinonaktifkan. Update dari saluran developer."
+    },
+    "v3_2": {
+      "enabled": false,
+      "version_label": "3.2",
+      "update_url": "https://whatsapp.com/channel/0029VbCrRPjDDmFLQpbX6n3n",
+      "update_title": "Update APK Diperlukan",
+      "update_message": "Versi 3.2 sudah dinonaktifkan. Update APK terbaru dari saluran developer."
+    },
+    "v3_2_1": {
+      "enabled": true,
+      "version_label": "3.2.1",
+      "minimum_version": "3.2.1",
+      "latest_version": "3.2.1"
+    }
+  },
+  "developer_ad": {
+    "enabled": false,
+    "id": "ad_001",
+    "image_url": "",
+    "title": "",
+    "description": "",
+    "link_url": "",
+    "duration_value": 1,
+    "duration_unit": "hari",
+    "starts_at": 0,
+    "expires_at": 0,
+    "updated_at": 0
+  }
+}

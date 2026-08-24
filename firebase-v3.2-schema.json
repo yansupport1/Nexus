@@ -1,0 +1,25 @@
+{
+  "version_schema": "v3.2",
+  "app_config": {
+    "min_supported_version": "3.2",
+    "disabled_versions": [
+      "3.1"
+    ],
+    "latest_version": "3.2",
+    "update_url": "https://example.com/nexus-v3.2.apk",
+    "developer_ad": {
+      "enabled": false,
+      "id": "ad_001",
+      "image_url": "https://example.com/banner.jpg",
+      "title": "Judul iklan",
+      "description": "Deskripsi iklan dari developer",
+      "link_url": "https://example.com",
+      "duration_value": 1,
+      "duration_unit": "hari",
+      "starts_at": 0,
+      "expires_at": 0,
+      "updated_at": 0
+    }
+  },
+  "notes": "Jangan mengisi harga, saldo, atau transaksi crypto secara manual. MARKET hanya membaca data publik CoinPaprika; BUY/SELL masih UI disabled."
+}

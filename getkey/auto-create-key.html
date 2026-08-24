@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Get Key — Nexus-X Terminal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    :root {
+      --primary:#00ff41; --secondary:#00cc33; --bg:#010805;
+      --card:rgba(0,18,0,0.88); --border:rgba(0,255,65,0.35);
+      --text:#b8ffb8; --muted:#3d7a3d;
+      --success:#00ff41; --danger:#ff003c; --warning:#ccff00;
+      --radius:6px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Share Tech Mono',ui-monospace,monospace;-webkit-tap-highlight-color:transparent}
+    body{background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 14px;position:relative;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 15% 5%,rgba(0,122,255,.2) 0%,transparent 45%),radial-gradient(ellipse at 85% 95%,rgba(88,86,214,.14) 0%,transparent 45%)}
+    .wrap{width:100%;max-width:420px;position:relative;z-index:1}
+    .header{text-align:center;margin-bottom:22px}
+    .logo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;margin:0 auto 12px;box-shadow:0 8px 28px rgba(0,122,255,.4)}
+    .header h1{font-size:1.45rem;font-weight:800;letter-spacing:-.4px}
+    .header h1 span{color:var(--primary)}
+    .header p{font-size:.88rem;color:var(--muted);margin-top:4px}
+    .card{background:var(--card);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:var(--radius);padding:24px 18px;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+    .steps{display:flex;justify-content:space-between;margin-bottom:22px;position:relative}
+    .steps::before{content:'';position:absolute;top:13px;left:8%;right:8%;height:2px;background:rgba(255,255,255,.1);z-index:0}
+    .step-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative;z-index:1;transition:all .3s}
+    .step-dot.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 14px rgba(0,122,255,.5)}
+    .step-dot.done{background:var(--success);border-color:var(--success);color:#fff}
+    .step-panel{display:none}
+    .step-panel.active{display:block;animation:fadeUp .35s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:7px}
+    .form-group input{width:100%;padding:13px 14px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:1rem;outline:none}
+    .form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,122,255,.15)}
+    .error-msg{color:var(--danger);font-size:.82rem;margin-top:6px;display:none}
+    .error-msg.show{display:block}
+    .info-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,122,255,.12);border:1px solid rgba(0,122,255,.25);color:var(--primary);padding:5px 11px;border-radius:20px;font-size:.78rem;font-weight:600;margin-bottom:14px}
+    .btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s}
+    .btn:active{transform:scale(.97)}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 6px 22px rgba(0,122,255,.35)}
+    .btn-secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border);margin-top:9px}
+    .btn-success{background:var(--success);color:#fff;box-shadow:0 6px 22px rgba(52,199,89,.3)}
+    .btn-wa{background:#25D366;color:#fff;box-shadow:0 6px 22px rgba(37,211,102,.3);margin-bottom:10px}
+    .slider-captcha{position:relative;width:100%;height:50px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:14px;overflow:hidden;user-select:none;touch-action:none}
+    .slider-captcha.verified{border-color:var(--success);background:rgba(52,199,89,.12)}
+    .slider-track-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(0,122,255,.35),rgba(52,199,89,.4));border-radius:14px 0 0 14px;pointer-events:none}
+    .slider-captcha.verified .slider-track-fill{width:100%!important;background:rgba(52,199,89,.35);border-radius:14px}
+    .slider-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:600;color:var(--muted);pointer-events:none}
+    .slider-captcha.verified .slider-text{color:var(--success)}
+    .slider-handle{position:absolute;left:3px;top:3px;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;cursor:grab;box-shadow:0 4px 14px rgba(0,122,255,.4);z-index:2;touch-action:none}
+    .slider-captcha.verified .slider-handle{background:var(--success);left:calc(100% - 47px)!important;box-shadow:0 4px 14px rgba(52,199,89,.4)}
+    .channel-box{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
+    .channel-box i{font-size:32px;color:#25D366;margin-bottom:8px}
+    .channel-box p{font-size:.88rem;color:var(--muted);line-height:1.45}
+    .channel-check{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;cursor:pointer;margin-bottom:12px;transition:.25s}
+    .channel-check.done{border-color:var(--success);background:rgba(52,199,89,.1)}
+    .channel-check .box{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .channel-check.done .box{background:var(--success);border-color:var(--success)}
+    .channel-check .box i{font-size:11px;color:#fff;opacity:0}
+    .channel-check.done .box i{opacity:1}
+    .bio-wrap{text-align:center;padding:10px 0 6px}
+    .bio-circle{width:130px;height:130px;border-radius:50%;margin:0 auto 16px;position:relative;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:3px solid rgba(255,255,255,.1);cursor:pointer;user-select:none;touch-action:none;transition:border-color .3s,box-shadow .3s}
+    .bio-circle.holding{border-color:var(--primary);box-shadow:0 0 30px rgba(0,122,255,.35);animation:pulse-bio 1s ease-in-out infinite}
+    .bio-circle.done{border-color:var(--success);box-shadow:0 0 30px rgba(52,199,89,.4);background:rgba(52,199,89,.12)}
+    .bio-progress{position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--primary) 0deg,transparent 0deg);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));pointer-events:none}
+    .bio-icon{font-size:40px;color:var(--muted);z-index:1;transition:.3s}
+    .bio-circle.holding .bio-icon{color:var(--primary)}
+    .bio-circle.done .bio-icon{color:var(--success)}
+    .bio-timer{font-size:1.1rem;font-weight:800;color:var(--primary);margin-bottom:6px;font-variant-numeric:tabular-nums}
+    .bio-timer.done{color:var(--success)}
+    .bio-hint{font-size:.85rem;color:var(--muted)}
+    @keyframes pulse-bio{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    .spinner{width:38px;height:38px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .result-box{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px}
+    .result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.88rem}
+    .result-row:last-child{border-bottom:none}
+    .result-row .label{color:var(--muted)}
+    .result-row .value{font-weight:600;text-align:right;word-break:break-all;max-width:58%}
+    .result-row .value.key{color:var(--primary);font-family:monospace;letter-spacing:.4px}
+    .result-row .value.ok{color:var(--success)}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(18px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:28px;text-align:center}
+    .overlay.show{display:flex}
+    .overlay .icon{font-size:44px;margin-bottom:12px}
+    .overlay h2{font-size:1.25rem;margin-bottom:8px}
+    .overlay p{color:var(--muted);font-size:.92rem;max-width:320px;line-height:1.5}
+    .result-box{border:1px solid rgba(0,122,255,.25);box-shadow:0 12px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);}
+    .step-card{backdrop-filter:blur(16px);}
+    .footer{text-align:center;margin-top:18px;font-size:.78rem;color:var(--muted)}
+    .limit-banner{background:rgba(255,59,48,.12);border:1px solid rgba(255,59,48,.3);border-radius:12px;padding:12px;text-align:center;margin-bottom:14px;font-size:.85rem;color:var(--danger);display:none}
+    .limit-banner.show{display:block}
+  
+    /* === HACKER TERMINAL THEME === */
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    :root {
+      --primary: #00ff41 !important;
+      --secondary: #00cc33 !important;
+      --bg: #010805 !important;
+      --card: rgba(0, 18, 0, 0.88) !important;
+      --border: rgba(0, 255, 65, 0.35) !important;
+      --text: #b8ffb8 !important;
+      --muted: #3d7a3d !important;
+      --success: #00ff41 !important;
+      --danger: #ff003c !important;
+      --warning: #ccff00 !important;
+      --radius: 6px;
+    }
+    html, body {
+      background: #010805 !important;
+      color: #b8ffb8 !important;
+      font-family: 'Share Tech Mono', ui-monospace, monospace !important;
+    }
+    body {
+      background-color: #010805 !important;
+      background-image:
+        linear-gradient(rgba(0,255,65,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,65,0.04) 1px, transparent 1px) !important;
+      background-size: 24px 24px !important;
+    }
+    /* Matrix rain canvas */
+    #matrix_rain {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: 0.35;
+    }
+    .wrap { position: relative; z-index: 1; }
+    .header .logo {
+      background: rgba(0,255,65,0.1) !important;
+      border: 1px solid rgba(0,255,65,0.5) !important;
+      box-shadow: 0 0 24px rgba(0,255,65,0.35) !important;
+      color: #00ff41 !important;
+      border-radius: 8px !important;
+    }
+    .header h1, .header h1 span {
+      color: #00ff41 !important;
+      text-shadow: 0 0 12px rgba(0,255,65,0.6) !important;
+    }
+    .header p { color: #3d7a3d !important; }
+    .card, .channel-box, .result-box, #feedback_box, .slider-captcha, .limit-banner {
+      background: rgba(0,16,0,0.92) !important;
+      border: 1px solid rgba(0,255,65,0.35) !important;
+      box-shadow: 0 0 28px rgba(0,255,65,0.12) !important;
+      border-radius: 6px !important;
+      backdrop-filter: none !important;
+    }
+    .step-dot.active {
+      background: #00ff41 !important;
+      border-color: #00ff41 !important;
+      color: #000 !important;
+      box-shadow: 0 0 14px rgba(0,255,65,0.6) !important;
+    }
+    .step-dot.done { background: #00aa30 !important; border-color: #00aa30 !important; color: #fff !important; }
+    .btn-primary, button.btn-primary {
+      background: #001a00 !important;
+      color: #00ff41 !important;
+      border: 1px solid #00ff41 !important;
+      box-shadow: 0 0 16px rgba(0,255,65,0.35) !important;
+      border-radius: 4px !important;
+    }
+    .btn-primary:active { box-shadow: 0 0 8px rgba(0,255,65,0.5) !important; transform: scale(0.98) !important; }
+    .btn-secondary {
+      background: transparent !important;
+      color: #00ff41 !important;
+      border: 1px solid rgba(0,255,65,0.4) !important;
+      border-radius: 4px !important;
+    }
+    .btn-success {
+      background: #00ff41 !important;
+      color: #000 !important;
+      border: 1px solid #00ff41 !important;
+      border-radius: 4px !important;
+    }
+    .btn-wa {
+      background: #001a00 !important;
+      color: #00ff41 !important;
+      border: 1px solid #00ff41 !important;
+      border-radius: 4px !important;
+    }
+    input, .form-group input {
+      background: rgba(0,0,0,0.7) !important;
+      border: 1px solid rgba(0,255,65,0.35) !important;
+      color: #00ff41 !important;
+      border-radius: 4px !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+    .info-badge {
+      background: rgba(0,255,65,0.1) !important;
+      border-color: rgba(0,255,65,0.35) !important;
+      color: #00ff41 !important;
+    }
+    .slider-handle {
+      background: #00ff41 !important;
+      color: #000 !important;
+      box-shadow: 0 0 14px rgba(0,255,65,0.5) !important;
+      border-radius: 4px !important;
+    }
+    .bio-circle.holding, .bio-circle.done {
+      border-color: #00ff41 !important;
+      box-shadow: 0 0 30px rgba(0,255,65,0.4) !important;
+    }
+    .footer { color: #2d5a2d !important; }
+    .footer::after { content: ' · terminal v3.0'; }
+    #btn_open_buy, #buy_key_panel { display: none !important; }
+
+    /* === NEXUS-X COMIC 3D KEY PAGE === */
+    body{background:#120d24!important;color:#fff!important;font-family:Inter,system-ui,sans-serif!important;overflow-x:hidden}
+    body::before{background:radial-gradient(circle at 12% 8%,rgba(255,207,51,.18),transparent 32%),radial-gradient(circle at 92% 18%,rgba(255,91,138,.2),transparent 30%),linear-gradient(135deg,#100b20,#1b1230 58%,#0d1727)!important}
+    body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.16;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:13px 13px;mask-image:linear-gradient(135deg,transparent 0%,#000 40%,transparent 100%)}
+    #matrix_rain{opacity:.05!important;z-index:0!important}
+    .wrap{max-width:520px!important;z-index:2!important}
+    .header{margin-bottom:16px!important}.header .logo{width:72px;height:72px;border-radius:22px!important;background:linear-gradient(135deg,#ffcf33,#ff5b8a)!important;border:3px solid #161122!important;box-shadow:6px 7px 0 #161122,0 18px 34px rgba(255,91,138,.28)!important;color:#161122!important}.header h1,.header h1 span{color:#fff!important;text-shadow:3px 3px 0 #161122!important}.header h1 span{color:#ffcf33!important}.header p{color:#c6b6df!important}
+    .card{background:linear-gradient(145deg,rgba(59,37,86,.95),rgba(22,16,39,.96))!important;border:3px solid #161122!important;border-radius:24px!important;box-shadow:8px 9px 0 #161122,0 28px 60px rgba(0,0,0,.35)!important;padding:22px 18px!important}
+    .steps::before{background:#ffcf33!important;height:3px}.step-dot{background:#2b1d43!important;border:3px solid #161122!important;color:#fff!important;box-shadow:3px 3px 0 #161122}.step-dot.active{background:#ffcf33!important;color:#161122!important;border-color:#161122!important}.step-dot.done{background:#48e19a!important;color:#161122!important}
+    .form-group label,.bio-hint,.footer{color:#c6b6df!important}.form-group input{background:#100c1d!important;border:3px solid #161122!important;border-radius:14px!important;color:#fff!important;box-shadow:4px 4px 0 #161122}.form-group input:focus{border-color:#ffcf33!important;box-shadow:4px 4px 0 #161122,0 0 0 3px rgba(255,207,51,.22)!important}
+    .btn{border:3px solid #161122!important;border-radius:14px!important;box-shadow:4px 5px 0 #161122!important;font-weight:900!important;min-height:50px}.btn:active{transform:translate(3px,3px) scale(.98)!important;box-shadow:1px 2px 0 #161122!important}.btn-primary{background:linear-gradient(135deg,#ffcf33,#ff8c4a)!important;color:#161122!important}.btn-secondary{background:#2b1d43!important;color:#fff!important}.btn-success{background:#48e19a!important;color:#161122!important}.btn-wa{background:#24d39a!important;color:#071a13!important}
+    .info-badge{background:#ffcf33!important;color:#161122!important;border:2px solid #161122!important;border-radius:10px!important;box-shadow:3px 3px 0 #161122}.slider-captcha,.channel-check,.result-box,.limit-banner{border:3px solid #161122!important;border-radius:14px!important;background:#2b1d43!important}.slider-handle{background:#ff5b8a!important;border:3px solid #161122!important;box-shadow:3px 3px 0 #161122}.bio-circle{border:4px solid #161122!important;background:#2b1d43!important;box-shadow:5px 6px 0 #161122}.bio-circle.done{border-color:#48e19a!important;box-shadow:5px 6px 0 #161122,0 0 24px rgba(72,225,154,.4)!important}.bio-timer{color:#ffcf33!important}.bio-timer.done{color:#48e19a!important}.overlay{z-index:50!important;background:rgba(9,6,18,.94)!important}.developer_ad_card{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;position:relative;margin:0 0 14px;padding:12px;background:linear-gradient(145deg,#3c2753,#211630);border:3px solid #161122;border-radius:20px;box-shadow:6px 7px 0 #161122;z-index:3}.developer_ad_media{width:110px;height:110px;overflow:hidden;border-radius:14px;background:#100c1d;border:2px solid rgba(255,255,255,.22)}.developer_ad_media img{display:block;width:100%;height:100%;object-fit:cover}.developer_ad_copy{min-width:0;padding-right:18px}.developer_ad_copy small{display:block;color:#ffcf33;font-weight:900;letter-spacing:1px;font-size:9px;margin-bottom:4px}.developer_ad_copy h3{font-size:15px;color:#fff;margin:0 0 5px;line-height:1.2}.developer_ad_copy p{font-size:11px;color:#d8cbea;line-height:1.35;margin:0 0 8px}.developer_ad_copy a{display:inline-flex;padding:6px 9px;background:#ffcf33;color:#161122;border:2px solid #161122;border-radius:8px;font-size:10px;font-weight:900;text-decoration:none}.developer_ad_close{position:absolute;right:7px;top:7px;width:25px;height:25px;border:2px solid #161122;border-radius:50%;background:#ff5b8a;color:#161122;font-weight:900;cursor:pointer;z-index:5}.adblock_notice{display:none;margin:0 0 14px;padding:11px 13px;background:rgba(255,207,51,.12);border:2px solid #ffcf33;border-radius:14px;color:#ffeaa0;font-size:11px;line-height:1.4}.adblock_notice button{float:right;border:0;background:transparent;color:#ffcf33;font-weight:900;font-size:18px;line-height:1;cursor:pointer}.adblock_notice b{color:#fff}@media(max-width:420px){.developer_ad_card{grid-template-columns:82px 1fr}.developer_ad_media{width:82px;height:82px}.developer_ad_copy h3{font-size:13px}.developer_ad_copy p{font-size:10px}}
+
+<style>.active_key_box{display:none;background:linear-gradient(145deg,#14294a,#0b1628);border:2px solid #00eaff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 0 25px rgba(0,234,255,.18)}.active_key_box.show{display:block;animation:fadeUp .35s ease}.active_key_box .ak_label{font-size:11px;color:#00eaff;font-weight:900;letter-spacing:1px}.active_key_box .ak_key{margin:9px 0;padding:12px;border-radius:10px;background:#07101e;border:1px solid rgba(0,234,255,.35);color:#fff;font-size:16px;font-weight:900;letter-spacing:1px;word-break:break-all;text-align:center}.active_key_box .ak_meta{font-size:10px;color:#9eb2ca;line-height:1.5;margin-bottom:10px}.active_key_box .ak_copy{width:100%;padding:11px;border:0;border-radius:10px;background:#00eaff;color:#06101c;font-weight:900;cursor:pointer}.create_progress{height:5px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden;margin:10px 0}.create_progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#00eaff,#8b5cf6,#ff4d8d);transition:width .2s}</style>
+</head>
+<body>
+  <canvas id="matrix_rain"></canvas>
+  <div class="overlay" id="maintenance_overlay">
+    <div class="icon" style="color:var(--warning)"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+    <h2>Website Maintenance</h2>
+    <p id="maintenance_msg">Website sedang dalam perawatan.</p>
+  </div>
+  <div class="overlay" id="off_overlay">
+    <div class="icon" style="color:var(--danger)"><i class="fa-solid fa-power-off"></i></div>
+    <h2>Website Nonaktif</h2>
+    <p>Fitur Auto Create Key sedang dimatikan oleh Developer.</p>
+  </div>
+  <div class="overlay" id="full_overlay">
+    <div class="icon" style="color:var(--warning)"><i class="fa-solid fa-database"></i></div>
+    <h2>Key Penuh</h2>
+    <p id="full_msg">Kuota key sudah penuh. Tunggu beberapa key expired/dihapus.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="header">
+      <div class="logo"><i class="fa-solid fa-key"></i></div>
+      <h1>Nexus<span>-X</span> Key</h1>
+      <p>&gt; free_key_terminal // no_buy_mode</p>
+    </div>
+          <div id="developer_ad_card" class="developer_ad_card" style="display:none" aria-live="polite">
+        <button class="developer_ad_close" type="button" onclick="closeDeveloperAd()" aria-label="Tutup iklan"><i class="fa-solid fa-xmark"></i></button>
+        <div class="developer_ad_media"><img id="developer_ad_image" alt="Iklan developer" loading="lazy"></div>
+        <div class="developer_ad_copy"><small><i class="fa-solid fa-bullhorn"></i> DEVELOPER NOTICE</small><h3 id="developer_ad_title">Informasi Developer</h3><p id="developer_ad_description"></p><a id="developer_ad_link" href="#" target="_blank" rel="noopener" style="display:none">Lihat</a></div>
+      </div>
+      <div id="adblock_notice" class="adblock_notice" role="status"><button type="button" onclick="closeAdblockNotice()" aria-label="Tutup pemberitahuan">×</button><b>Pemblokiran iklan terdeteksi.</b><br>Iklan bersifat opsional. DNS perangkat tidak diubah dan proses pembuatan key tetap dapat dilanjutkan.</div>
+      <div class="card">
+
+      <div class="steps">
+        <div class="step-dot active" data-step="1">1</div>
+        <div class="step-dot" data-step="2">2</div>
+        <div class="step-dot" data-step="3">3</div>
+        <div class="step-dot" data-step="4">4</div>
+        <div class="step-dot" data-step="5">5</div>
+      </div>
+      <div class="limit-banner" id="limit_banner">Kuota key hampir penuh</div>
+
+      <!-- 1 Nama -->
+      <div class="step-panel active" id="step1">
+        <div class="info-badge"><i class="fa-solid fa-gift"></i> Key Gratis · Max 1 Device</div>
+        <div class="form-group">
+          <label>Masukkan Nama Kamu</label>
+          <input type="text" id="input_name" placeholder="Contoh: Budi Gaming" maxlength="30" autocomplete="off">
+          <div class="error-msg" id="err_name">Nama wajib diisi (min. 3 karakter)</div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="goStep2()">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <!-- 2 Slider -->
+      <div class="step-panel" id="step2">
+        <div class="form-group">
+          <label>Verifikasi — Geser ke kanan</label>
+          <div class="slider-captcha" id="slider_captcha">
+            <div class="slider-track-fill" id="slider_fill"></div>
+            <div class="slider-text" id="slider_text">Geser untuk verifikasi →</div>
+            <div class="slider-handle" id="slider_handle"><i class="fa-solid fa-chevron-right"></i></div>
+          </div>
+          <div class="error-msg" id="err_robot">Geser sampai ujung kanan</div>
+        </div>
+        <button class="btn btn-primary" type="button" id="btn_step2" onclick="goStep3()" disabled style="opacity:.5">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="btn btn-secondary" type="button" onclick="goStep(1)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      </div>
+
+      <!-- 3 Channel -->
+      <div class="step-panel" id="step3">
+        <div class="channel-box">
+          <i class="fa-brands fa-whatsapp"></i>
+          <p>Gabung saluran WhatsApp resmi untuk mendapatkan key gratis.</p>
+        </div>
+        <button class="btn btn-wa" type="button" onclick="openChannel()"><i class="fa-brands fa-whatsapp"></i> Buka Saluran WhatsApp</button>
+        <div class="channel-check" id="channel_check" onclick="toggleChannel()">
+          <div class="box"><i class="fa-solid fa-check"></i></div>
+          <span style="font-size:.9rem;font-weight:500">Saya sudah bergabung di saluran</span>
+        </div>
+        <div class="error-msg" id="err_channel">Konfirmasi bergabung di saluran dulu</div>
+        <button class="btn btn-primary" type="button" id="btn_step3" onclick="goStep4()" disabled style="opacity:.5">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="btn btn-secondary" type="button" onclick="goStep(2)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      </div>
+
+      <!-- 4 Verifikasi tap 5x -->
+      <div class="step-panel" id="step4">
+        <div class="bio-wrap">
+          <div class="bio-timer" id="bio_timer">Tap 0/5</div>
+          <div class="bio-circle" id="bio_circle" role="button" tabindex="0" aria-label="Tap lima kali untuk verifikasi">
+            <div class="bio-progress" id="bio_progress"></div>
+            <i class="fa-solid fa-fingerprint bio-icon" id="bio_icon"></i>
+          </div>
+          <p class="bio-hint" id="bio_hint"><b>Tap 5×</b> pada ikon untuk verifikasi.</p>
+          <div class="error-msg" id="err_bio">Selesaikan tap 5× terlebih dahulu</div>
+        </div>
+        <button class="btn btn-primary" type="button" id="btn_step4" onclick="startCreate()" disabled style="opacity:.5">Buat Key Sekarang <i class="fa-solid fa-bolt"></i></button>
+        <button class="btn btn-secondary" type="button" onclick="goStep(3)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      </div>
+
+<div id="active_key_box" class="active_key_box"><div class="ak_label"><i class="fa-solid fa-shield-check"></i> KEY AKTIF DI SERVER</div><div id="active_key_value" class="ak_key">-</div><div id="active_key_meta" class="ak_meta">Key sebelumnya masih aktif.</div><button type="button" class="ak_copy" onclick="copyActiveKey()"><i class="fa-solid fa-copy"></i> Salin Key Aktif</button></div>
+      <!-- 5 Loading + Result -->
+      <div class="step-panel" id="step5">
+        <div id="gen_loading" style="text-align:center;padding:28px 0">
+          <div class="spinner"></div>
+          <p style="font-weight:600;margin-bottom:4px">Membuat Key...</p>
+          <p style="font-size:.84rem;color:var(--muted)" id="gen_status">Menghubungkan ke server...</p><div class="create_progress"><span id="create_progress_fill"></span></div>
+        </div>
+        <div id="gen_error" style="display:none;text-align:center;padding:20px 0">
+          <div style="font-size:36px;color:var(--danger);margin-bottom:8px"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <p style="font-weight:700;margin-bottom:6px">Gagal Membuat Key</p>
+          <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px" id="gen_error_msg">-</p>
+          <button class="btn btn-primary" type="button" onclick="goStep(4)">Coba Lagi</button>
+        </div>
+        <div id="gen_result" style="display:none">
+          <div style="text-align:center;margin-bottom:12px">
+            <div style="font-size:34px;color:var(--success);margin-bottom:4px"><i class="fa-solid fa-circle-check"></i></div>
+            <p style="font-weight:700;font-size:1.05rem">Key Berhasil Dibuat!</p>
+          </div>
+          <div class="result-box">
+            <div class="result-row"><span class="label">Nama</span><span class="value" id="res_name">-</span></div>
+            <div class="result-row"><span class="label">Key</span><span class="value key" id="res_key">-</span></div>
+            <div class="result-row"><span class="label">Role</span><span class="value ok" id="res_role">MEMBER</span></div>
+            <div class="result-row"><span class="label">Dibuat</span><span class="value" id="res_created">-</span></div>
+            <div class="result-row"><span class="label">Expired</span><span class="value" id="res_expired">-</span></div>
+          </div>
+          <button class="btn btn-success" type="button" onclick="copyKey()"><i class="fa-solid fa-copy"></i> Salin Key</button>
+          <button class="btn btn-secondary" type="button" onclick="openApp()"><i class="fa-solid fa-rocket"></i> Buka Aplikasi</button>
+        </div>
+      </div>
+    </div>
+    <div id="feedback_box" style="margin-top:14px;text-align:center;padding:12px;">
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">&gt; feedback_required</div>
+      <button type="button" onclick="sendFeedback(1)" style="font-size:18px;padding:8px 16px;margin:0 6px;border-radius:4px;border:1px solid rgba(0,255,65,0.5);background:rgba(0,255,65,0.1);color:#00ff41;cursor:pointer;">[ + ]</button>
+      <button type="button" onclick="sendFeedback(0)" style="font-size:18px;padding:8px 16px;margin:0 6px;border-radius:4px;border:1px solid rgba(255,0,60,0.5);background:rgba(255,0,60,0.1);color:#ff003c;cursor:pointer;">[ - ]</button>
+      <div id="feedback_stats" style="font-size:0.8rem;color:var(--muted);margin-top:8px;">-</div>
+    </div>
+    <div id="prayer_banner" style="display:none;margin-top:10px;padding:10px;border-radius:4px;border:1px solid rgba(0,255,65,0.3);font-size:0.85rem;text-align:center;"></div>
+    <div class="footer">Nexus-X terminal · max 1 device / key</div>
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+    /* ========== NEXUS SOURCE SHIELD v3 — client hard layer ========== */
+    var BAN_KEY = 'gkb_ban_until';
+    var _shieldArmed = true;
+    var _dbgHits = 0;
+
+    function deviceId(){
+      var id = localStorage.getItem('ack_device_id');
+      if(!id){ id='dev_'+Math.random().toString(36).substr(2,10)+Date.now().toString(36); localStorage.setItem('ack_device_id',id); }
+      return id;
+    }
+    function randomBanMs(){
+      var min = 30*60*1000;
+      var max = 18*60*60*1000;
+      return min + Math.floor(Math.random()*(max-min));
+    }
+    function formatLeft(ms){
+      var s = Math.ceil(ms/1000);
+      if(s < 60) return s+' detik';
+      var m = Math.ceil(s/60);
+      if(m < 60) return m+' menit';
+      var h = Math.floor(m/60); var mm = m%60;
+      return h+' jam '+mm+' menit';
+    }
+    function showBanScreen(until){
+      var left = until - Date.now();
+      if(left <= 0){ localStorage.removeItem(BAN_KEY); return false; }
+      try{
+        document.documentElement.innerHTML='';
+        document.open();
+        document.write('<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SECURE</title><style>body{margin:0;background:#010805;color:#00ff41;font-family:monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}h1{color:#ff003c;font-size:1.2rem;text-shadow:0 0 12px #ff003c;line-height:1.4}p{color:#3d7a3d;max-width:360px;line-height:1.6}</style></head><body><div><h1>Yah, kamu bukan developer web ini</h1><p>Mencoba buka / inspect source terdeteksi.<br>Coba lagi dalam <b id="banleft">'+formatLeft(left)+'</b>.</p></div><script>setInterval(function(){var u='+until+';var l=u-Date.now();if(l<=0)location.reload();var e=document.getElementById("banleft");if(e)e.textContent=(function(ms){var s=Math.ceil(ms/1000);if(s<60)return s+" detik";var m=Math.ceil(s/60);if(m<60)return m+" menit";return Math.floor(m/60)+" jam "+(m%60)+" menit";})(l);},1000);<\/script></body></html>');
+        document.close();
+      }catch(e){}
+      return true;
+    }
+    function showNotDevWarning(reason){
+      try {
+        if (document.getElementById('nx_not_dev_warn')) return;
+        var w = document.createElement('div');
+        w.id = 'nx_not_dev_warn';
+        w.setAttribute('style','position:fixed;inset:0;z-index:999999;background:rgba(1,8,5,0.92);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:monospace;');
+        w.innerHTML = '<div style="max-width:360px;border:1px solid #00ff41;box-shadow:0 0 24px rgba(0,255,65,0.25);padding:22px 18px;border-radius:8px;background:#001a00;color:#b8ffb8;">'+
+          '<div style="font-size:1.15rem;font-weight:800;color:#ff003c;margin-bottom:10px;line-height:1.35;">Yah, kamu bukan developer web ini</div>'+
+          '<div style="font-size:0.88rem;color:#3d7a3d;line-height:1.5;margin-bottom:14px;">Source / inspect tool terdeteksi. Jangan buka source lewat web lain atau DevTools.</div>'+
+          '<button type="button" id="nx_not_dev_ok" style="padding:10px 18px;border:1px solid #00ff41;background:#003300;color:#00ff41;font-family:monospace;font-weight:700;cursor:pointer;border-radius:4px;">Mengerti</button>'+
+          '</div>';
+        (document.body||document.documentElement).appendChild(w);
+        var btn = document.getElementById('nx_not_dev_ok');
+        if (btn) btn.onclick = function(){
+          try { w.remove(); } catch(e){}
+          applyBan(reason || 'source_tool');
+        };
+        setTimeout(function(){ try { if(w.parentNode){ w.remove(); applyBan(reason||'source_tool'); } } catch(e){} }, 4000);
+      } catch(e) {
+        applyBan(reason || 'source_tool');
+      }
+    }
+    var until = parseInt(localStorage.getItem(BAN_KEY)||'0',10);
+    if(until && until > Date.now()){
+      var id = deviceId();
+      var x = new XMLHttpRequest();
+      x.open('GET', 'https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/blocked_devices/'+encodeURIComponent(id)+'.json', true);
+      x.timeout = 5000;
+      x.onload = function(){
+        try {
+          var d = JSON.parse(x.responseText||'null');
+          if(!d){ localStorage.removeItem(BAN_KEY); location.reload(); return; }
+        } catch(e){}
+        showBanScreen(until);
+      };
+      x.onerror = function(){ showBanScreen(until); };
+      x.ontimeout = function(){ showBanScreen(until); };
+      try { x.send(); } catch(e){ showBanScreen(until); }
+      return;
+    } else if(until) {
+      localStorage.removeItem(BAN_KEY);
+    }
+    function applyBan(reason){
+      if(!_shieldArmed) return;
+      var ms = randomBanMs();
+      var u = Date.now() + ms;
+      localStorage.setItem(BAN_KEY, String(u));
+      try {
+        var id = deviceId();
+        var payload = { device: id, until: u, reason: reason||'shield', at: Date.now(), ua: (navigator.userAgent||'').slice(0,120) };
+        var url = 'https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/blocked_devices/'+encodeURIComponent(id)+'.json';
+        var x = new XMLHttpRequest();
+        x.open('PUT', url, true);
+        x.setRequestHeader('Content-Type','application/json');
+        x.send(JSON.stringify(payload));
+      } catch(e){}
+      showBanScreen(u);
+    }
+
+    /* --- block inspect shortcuts --- */
+    document.addEventListener('keydown', function(e){
+      var k = e.key || '';
+      var code = e.keyCode || 0;
+      if(k==='F12'||code===123){ e.preventDefault(); e.stopPropagation(); showNotDevWarning('f12'); return false; }
+      if(e.ctrlKey && e.shiftKey && /^(I|J|C|K)$/i.test(k)){ e.preventDefault(); showNotDevWarning('devtools'); return false; }
+      if((e.ctrlKey||e.metaKey) && /^(u|U)$/.test(k)){ e.preventDefault(); showNotDevWarning('viewsource'); return false; }
+      if((e.ctrlKey||e.metaKey) && /^(s|S)$/.test(k)){ e.preventDefault(); showNotDevWarning('save'); return false; }
+      if((e.ctrlKey||e.metaKey) && /^(f|F)$/.test(k)){ e.preventDefault(); showNotDevWarning('search'); return false; }
+      if((e.ctrlKey||e.metaKey) && /^(d|D)$/.test(k)){ e.preventDefault(); showNotDevWarning('bookmark'); return false; }
+      if(e.ctrlKey && e.shiftKey && (code===73||code===74||code===67)){ e.preventDefault(); showNotDevWarning('devtools'); return false; }
+    }, true);
+
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; }, true);
+    document.addEventListener('selectstart', function(e){
+      var t = e.target;
+      if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA')) return true;
+      e.preventDefault(); return false;
+    }, true);
+    document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; }, true);
+    document.addEventListener('copy', function(e){
+      var t = e.target;
+      if(t && (t.id==='res_key'||(t.classList&&t.classList.contains('key')))) return true;
+      e.preventDefault(); return false;
+    }, true);
+
+    /* --- anti iframe / web viewer lain yang embed source --- */
+    try {
+      if (window.top !== window.self) {
+        showNotDevWarning('iframe_viewer');
+        try { window.top.location = window.self.location; } catch(e) {}
+      }
+    } catch(e) {
+      showNotDevWarning('iframe_viewer');
+    }
+    /* referrer dari tools view-source / proxy viewer umum */
+    try {
+      var ref = (document.referrer || '').toLowerCase();
+      var bad = ['view-source','web-check','urlscan','builtwith','wappalyzer','sitelike','pagespeed','gtmetrix','htmlweb','codebeautify','jsfiddle','codepen.io','jsbin.com','raw.githack','rawgit'];
+      for (var bi = 0; bi < bad.length; bi++) {
+        if (ref.indexOf(bad[bi]) >= 0) {
+          showNotDevWarning('external_viewer');
+          break;
+        }
+      }
+      var href = (location.href || '').toLowerCase();
+      if (href.indexOf('view-source:') === 0) {
+        showNotDevWarning('viewsource_url');
+      }
+    } catch(e) {}
+
+    /* --- mute console --- */
+    try {
+      var noop = function(){};
+      var methods = ['log','debug','info','warn','error','table','trace','dir','dirxml','group','groupEnd','clear'];
+      for (var i=0;i<methods.length;i++) {
+        try { console[methods[i]] = noop; } catch(e){}
+      }
+    } catch(e){}
+
+    /* --- debugger trap (slow if DevTools open) --- */
+    function dbgTrap(){
+      if(!_shieldArmed) return;
+      var t0 = performance.now();
+      // eslint-disable-next-line no-debugger
+      debugger;
+      var dt = performance.now() - t0;
+      if(dt > 120){
+        _dbgHits++;
+        if(_dbgHits >= 2) showNotDevWarning('debugger');
+      }
+    }
+    setInterval(dbgTrap, 3200);
+
+    /* --- DevTools size detect --- */
+    function detectDevtools(){
+      if(!_shieldArmed) return;
+      var gapW = Math.abs(window.outerWidth - window.innerWidth);
+      var gapH = Math.abs(window.outerHeight - window.innerHeight);
+      if (gapW > 180 || gapH > 220) {
+        showNotDevWarning('devtools_size');
+      }
+    }
+    setInterval(detectDevtools, 2500);
+
+    /* --- console open trap --- */
+    try {
+      var el = new Image();
+      Object.defineProperty(el, 'id', {
+        get: function(){
+          showNotDevWarning('console_open');
+          return 'x';
+        }
+      });
+      setInterval(function(){
+        if(!_shieldArmed) return;
+        try { console.log('%c', el); console.clear(); } catch(e){}
+      }, 4000);
+    } catch(e){}
+
+    /* --- anti-spam rapid interaction --- */
+    var _clicks = 0;
+    document.addEventListener('click', function(){
+      _clicks++;
+      if(_clicks > 40){ applyBan('click_spam'); }
+      setTimeout(function(){ _clicks = Math.max(0, _clicks-1); }, 2000);
+    }, true);
+
+    /* CSS shield */
+    try {
+      var st = document.createElement('style');
+      st.textContent = 'body{-webkit-user-select:none;user-select:none;} input,textarea{-webkit-user-select:text;user-select:text;}';
+      document.head.appendChild(st);
+    } catch(e){}
+  })();
+
+  // Firebase — plain init (stabil, anti-stuck). Proteksi utama = rules + anti-devtools.
+  var fb = {
+    apiKey: "AIzaSyCaLwgD-awY2IogmcXZPh-iaxZpg0Y6G-4",
+    authDomain: "yanzcode-74c34.firebaseapp.com",
+    databaseURL: "https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "yanzcode-74c34",
+    storageBucket: "yanzcode-74c34.firebasestorage.app",
+    messagingSenderId: "418323693228",
+    appId: "1:418323693228:android:d1889645ad0fa098886909"
+  };
+  try { firebase.initializeApp(fb); } catch(e) {}
+  var _firebaseDb = firebase.database();
+  var FIREBASE_DATA_ROOT = 'v3_2';
+  var db = { ref: function(path) {
+    path = String(path || '').replace(/^\/+|\/+$/g, '');
+    return _firebaseDb.ref(FIREBASE_DATA_ROOT + (path ? '/' + path : ''));
+  }};
+
+  var currentStep=1, isSliderVerified=false, channelJoined=false, bioDone=false;
+  var generatedKey='', sliderDragging=false, sliderStartX=0, sliderCurrentX=0;
+  var bioHolding=false, bioStart=0, bioRAF=null, BIO_MS=5000, bioTaps=0, BIO_TAPS_NEED=5, bioTapDone=false, bioHoldDone=false;
+  var CHANNEL_URL='https://whatsapp.com/channel/0029VbCrRPjDDmFLQpbX6n3n';
+  var websiteConfig={
+    enabled:true, auto_create:true, default_role:'MEMBER', default_duration_days:3,
+    random_expired:false, random_min_days:1, random_max_days:7,
+    maintenance:false, maintenance_message:'Website sedang dalam perawatan.',
+    max_per_device:1, max_keys_total:100
+  };
+  var createTimeout=null;
+
+  function loadConfig(){
+    db.ref('app_config/website').on('value', function(s){
+      var cfg=s.val();
+      if(cfg) websiteConfig=Object.assign(websiteConfig, cfg);
+      applyConfig();
+    }, function(err){ console.log('config err', err); });
+  }
+  function applyConfig(){
+    var maint=document.getElementById('maintenance_overlay');
+    var off=document.getElementById('off_overlay');
+    if(websiteConfig.maintenance===true){
+      document.getElementById('maintenance_msg').textContent=websiteConfig.maintenance_message||'Maintenance.';
+      maint.classList.add('show'); off.classList.remove('show'); return;
+    }
+    maint.classList.remove('show');
+    if(websiteConfig.enabled===false||websiteConfig.auto_create===false) off.classList.add('show');
+    else off.classList.remove('show');
+  }
+
+  function loadDeveloperAd(){
+    var refs=[db.ref('developer_ad').once('value'),db.ref('app_config/developer_ad').once('value')];
+    Promise.all(refs).then(function(snaps){
+      var ad=snaps[0].val()||snaps[1].val()||{};
+      var box=document.getElementById('developer_ad_card');
+      if(!box || ad.enabled===false || (!ad.image_url && !ad.image && !ad.imageUrl && !ad.title && !ad.description)) return;
+      var id=String(ad.id||ad.updated_at||ad.image_url||ad.title||'default');
+      if(localStorage.getItem('nx_closed_ad_'+id)==='1') return;
+      var image=ad.image_url||ad.imageUrl||ad.image||'';
+      var img=document.getElementById('developer_ad_image'); if(img && image){img.src=image;img.onerror=function(){box.style.display='none'};}
+      var title=document.getElementById('developer_ad_title'); if(title) title.textContent=ad.title||'Informasi Developer';
+      var desc=document.getElementById('developer_ad_description'); if(desc) desc.textContent=ad.description||'';
+      var link=document.getElementById('developer_ad_link');
+      var url=ad.link_url||ad.linkUrl||ad.url||'';
+      if(link && url){link.href=url;link.textContent=ad.button_text||ad.buttonText||'Lihat';link.style.display='inline-flex'}
+      box.dataset.adId=id; box.style.display='grid';
+    }).catch(function(){});
+  }
+  function closeDeveloperAd(){
+    var box=document.getElementById('developer_ad_card');
+    if(!box) return;
+    try{localStorage.setItem('nx_closed_ad_'+(box.dataset.adId||'default'),'1')}catch(e){}
+    box.style.display='none';
+  }
+  function detectAdBlock(){
+    var bait=document.createElement('div'); bait.className='adsbox ad-banner ad-unit adsbygoogle'; bait.style.cssText='position:absolute;left:-10000px;width:10px;height:10px;';
+    document.body.appendChild(bait);
+    setTimeout(function(){
+      var blocked=false;
+      try{blocked=getComputedStyle(bait).display==='none'||bait.offsetHeight===0||bait.offsetWidth===0}catch(e){}
+      try{bait.remove()}catch(e){}
+      if(blocked){var n=document.getElementById('adblock_notice');if(n)n.style.display='block'}
+    },700);
+  }
+  function closeAdblockNotice(){var n=document.getElementById('adblock_notice');if(n)n.style.display='none'}
+  function goStep(n){
+    currentStep=n;
+    document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+    var panel=document.getElementById('step'+n);
+    if(panel) panel.classList.add('active');
+    document.querySelectorAll('.step-dot').forEach(function(d){
+      var s=parseInt(d.getAttribute('data-step'));
+      d.classList.remove('active','done');
+      if(s===n) d.classList.add('active');
+      else if(s<n) d.classList.add('done');
+    });
+    if(n===4) resetBio();
+    if(n===5){
+      document.getElementById('gen_loading').style.display='block';
+      document.getElementById('gen_error').style.display='none';
+      document.getElementById('gen_result').style.display='none';
+      var ak=document.getElementById('active_key_box'); if(ak) ak.classList.remove('show');
+      var pf=document.getElementById('create_progress_fill'); if(pf) pf.style.width='0';
+      document.getElementById('gen_status').textContent='Menghubungkan ke server...';
+    }
+  }
+  function goStep2(){
+    var name=document.getElementById('input_name').value.trim();
+    if(name.length<3){ document.getElementById('err_name').classList.add('show'); return; }
+    document.getElementById('err_name').classList.remove('show');
+    goStep(2);
+  }
+  function goStep3(){
+    if(!isSliderVerified){ document.getElementById('err_robot').classList.add('show'); return; }
+    goStep(3);
+  }
+  function goStep4(){
+    if(!channelJoined){ document.getElementById('err_channel').classList.add('show'); return; }
+    goStep(4);
+  }
+  function startCreate(){
+    if(!bioDone){ document.getElementById('err_bio').classList.add('show'); return; }
+    goStep(5);
+    createKey();
+  }
+
+  /* Slider */
+  function initSlider(){
+    var handle=document.getElementById('slider_handle');
+    var captcha=document.getElementById('slider_captcha');
+    var fill=document.getElementById('slider_fill');
+    var text=document.getElementById('slider_text');
+    if(!handle||!captcha) return;
+    function getMax(){ return captcha.offsetWidth - handle.offsetWidth - 6; }
+    function onStart(x){ if(isSliderVerified)return; sliderDragging=true; sliderStartX=x; sliderCurrentX=0; }
+    function onMove(x){
+      if(!sliderDragging||isSliderVerified)return;
+      var dx=Math.max(0, Math.min(x-sliderStartX, getMax()));
+      sliderCurrentX=dx; handle.style.left=(3+dx)+'px'; fill.style.width=(dx+handle.offsetWidth/2)+'px';
+    }
+    function onEnd(){
+      if(!sliderDragging||isSliderVerified)return; sliderDragging=false;
+      var max=getMax();
+      if(sliderCurrentX >= max*0.9){
+        isSliderVerified=true; handle.style.left=''; fill.style.width='';
+        captcha.classList.add('verified'); text.textContent='✓ Terverifikasi';
+        handle.innerHTML='<i class="fa-solid fa-check"></i>';
+        document.getElementById('err_robot').classList.remove('show');
+        var btn=document.getElementById('btn_step2'); if(btn){btn.disabled=false;btn.style.opacity='1'}
+      } else {
+        handle.style.transition='left .3s'; fill.style.transition='width .3s';
+        handle.style.left='3px'; fill.style.width='0';
+        setTimeout(function(){handle.style.transition='';fill.style.transition=''},300);
+      }
+    }
+    handle.addEventListener('mousedown',function(e){e.preventDefault();onStart(e.clientX)});
+    document.addEventListener('mousemove',function(e){if(sliderDragging)onMove(e.clientX)});
+    document.addEventListener('mouseup',function(){if(sliderDragging)onEnd()});
+    handle.addEventListener('touchstart',function(e){e.preventDefault();onStart(e.touches[0].clientX)},{passive:false});
+    document.addEventListener('touchmove',function(e){if(sliderDragging){e.preventDefault();onMove(e.touches[0].clientX)}},{passive:false});
+    document.addEventListener('touchend',function(){if(sliderDragging)onEnd()});
+  }
+
+  function openChannel(){ window.open(CHANNEL_URL,'_blank'); }
+  function toggleChannel(){
+    channelJoined=!channelJoined;
+    var el=document.getElementById('channel_check');
+    var btn=document.getElementById('btn_step3');
+    if(channelJoined){ el.classList.add('done'); document.getElementById('err_channel').classList.remove('show'); if(btn){btn.disabled=false;btn.style.opacity='1'} }
+    else { el.classList.remove('done'); if(btn){btn.disabled=true;btn.style.opacity='.5'} }
+  }
+
+  function resetBio(){
+    bioDone=false; bioHolding=false; bioStart=0; bioTaps=0; bioTapDone=false; bioHoldDone=false;
+    if(bioRAF) cancelAnimationFrame(bioRAF);
+    var circle=document.getElementById('bio_circle');
+    if(circle) circle.classList.remove('holding','done');
+    var progress=document.getElementById('bio_progress');
+    if(progress) progress.style.background='conic-gradient(var(--primary) 0deg, transparent 0deg)';
+    var timer=document.getElementById('bio_timer'); if(timer){timer.textContent='Tap 0/5';timer.classList.remove('done')}
+    var hint=document.getElementById('bio_hint'); if(hint) hint.innerHTML='<b>Tap 5×</b> pada ikon untuk verifikasi.';
+    var icon=document.getElementById('bio_icon'); if(icon) icon.className='fa-solid fa-fingerprint bio-icon';
+    var btn=document.getElementById('btn_step4'); if(btn){btn.disabled=true;btn.style.opacity='.5'}
+    var err=document.getElementById('err_bio'); if(err) err.classList.remove('show');
+  }
+  function initBio(){
+    var circle=document.getElementById('bio_circle'); if(!circle) return;
+    var lastPointerTap=0;
+    function registerTap(e){
+      if(e) e.preventDefault();
+      if(bioDone || bioTaps>=BIO_TAPS_NEED) return;
+      var now=Date.now();
+      if(now-lastPointerTap<250) return;
+      lastPointerTap=now;
+      bioTaps++;
+      var timer=document.getElementById('bio_timer');
+      var progress=document.getElementById('bio_progress');
+      var hint=document.getElementById('bio_hint');
+      if(timer) timer.textContent='Tap '+bioTaps+'/'+BIO_TAPS_NEED;
+      if(progress) progress.style.background='conic-gradient(var(--primary) '+(bioTaps/BIO_TAPS_NEED*360)+'deg, transparent 0deg)';
+      if(navigator.vibrate) try{navigator.vibrate(15)}catch(err){}
+      if(bioTaps>=BIO_TAPS_NEED){
+        bioTapDone=true; bioDone=true; circle.classList.add('done');
+        if(progress) progress.style.background='conic-gradient(var(--success) 360deg, transparent 360deg)';
+        if(timer){timer.textContent='ACCESS GRANTED';timer.classList.add('done')}
+        if(hint) hint.innerHTML='Verifikasi OK · 5 tap diterima';
+        var icon=document.getElementById('bio_icon'); if(icon) icon.className='fa-solid fa-check bio-icon';
+        var btn=document.getElementById('btn_step4'); if(btn){btn.disabled=false;btn.style.opacity='1'}
+        var err=document.getElementById('err_bio'); if(err) err.classList.remove('show');
+        if(navigator.vibrate) try{navigator.vibrate([30,40,30])}catch(err2){}
+      }
+    }
+    circle.addEventListener('pointerup',registerTap,{passive:false});
+    circle.addEventListener('click',registerTap);
+    circle.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){registerTap(e)}});
+  }
+
+  function genKey(len){
+    var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var prefix='';
+    for(var i=0;i<5;i++) prefix+=chars.charAt(Math.floor(Math.random()*chars.length));
+    return prefix + '-FREE-NEXUS';
+  }
+  function getRandomDuration(){
+    // Mode hoki: bobot acak — sering hari, kadang jam, jarang menit (bukan selalu menit/jam)
+    // Random always ON for FREE web keys (lebih canggih)
+    var minD = parseInt(websiteConfig.random_min_days)||1;
+    var maxD = parseInt(websiteConfig.random_max_days)||7;
+    if(minD>maxD){ var t=minD; minD=maxD; maxD=t; }
+    // Weighted pool (100 titik)
+    // 55% hari, 25% jam, 12% menit, 8% jackpot hari panjang
+    var roll = Math.floor(Math.random()*100);
+    var unit, minV, maxV;
+    if(roll < 55){
+      unit = 'hari'; minV = minD; maxV = maxD;
+    } else if(roll < 80){
+      unit = 'jam'; minV = 1; maxV = 18;
+    } else if(roll < 92){
+      unit = 'menit'; minV = 15; maxV = 90;
+    } else {
+      // jackpot: 3–14 hari
+      unit = 'hari'; minV = Math.max(3, minD); maxV = Math.max(maxD, 14);
+    }
+    if(minV>maxV){ var t2=minV; minV=maxV; maxV=t2; }
+    var val = Math.floor(Math.random()*(maxV-minV+1))+minV;
+    return { value: val, unit: unit, label: val + ' ' + unit, luck: roll };
+  }
+  function durationToMs(label){
+    var dur = (label||'')+'';
+    var n = parseInt(dur,10)||0;
+    if(dur.indexOf('menit')>=0) return n*60*1000;
+    if(dur.indexOf('jam')>=0) return n*60*60*1000;
+    if(dur.indexOf('hari')>=0) return n*24*60*60*1000;
+    if(dur.indexOf('minggu')>=0) return n*7*24*60*60*1000;
+    return n*24*60*60*1000;
+  }
+  function getDays(){
+    // backward compat — return number of days approx
+    var d = getRandomDuration();
+    if(d.unit==='menit') return Math.max(1, Math.ceil(d.value/1440));
+    if(d.unit==='jam') return Math.max(1, Math.ceil(d.value/24));
+    return d.value;
+  }
+  function getDeviceId(){
+    var id=localStorage.getItem('ack_device_id');
+    if(!id){ id='dev_'+Math.random().toString(36).substr(2,10)+Date.now().toString(36); localStorage.setItem('ack_device_id',id); }
+    return id;
+  }
+  function deviceFingerprint(){var n=(navigator.userAgent||'')+'|'+(navigator.platform||'')+'|'+(screen.width||0)+'x'+(screen.height||0)+'|'+(screen.colorDepth||0)+'|'+(Intl.DateTimeFormat().resolvedOptions().timeZone||'')+'|'+(navigator.language||'')+'|'+(navigator.hardwareConcurrency||0)+'|'+(navigator.deviceMemory||0);var h=2166136261;for(var i=0;i<n.length;i++){h^=n.charCodeAt(i);h=Math.imul(h,16777619)}return 'fp_'+(h>>>0).toString(36)}
+  function deviceClaimUrl(){return 'https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/device_claims/'+encodeURIComponent(deviceFingerprint())+'.json'}
+  function globalKeyActive(d){if(!d)return false;if(d.duration==='permanent')return true;if(d.expired){var t=new Date(d.expired).getTime();if(!isNaN(t))return Date.now()<t}if(d.created_at&&d.duration){var c=new Date(d.created_at).getTime(),n=parseInt(d.duration,10)||0,u=String(d.duration);var m=u.indexOf('menit')>=0?n*60000:u.indexOf('jam')>=0?n*3600000:u.indexOf('minggu')>=0?n*604800000:n*86400000;if(!isNaN(c)&&m)return Date.now()<c+m}return !!d.created_at}
+  function saveDeviceClaim(key,expires,cb){var x=new XMLHttpRequest();x.open('PUT',deviceClaimUrl(),true);x.setRequestHeader('Content-Type','application/json');x.timeout=7000;x.onload=function(){if(cb)cb()};x.onerror=function(){if(cb)cb()};x.ontimeout=function(){if(cb)cb()};try{x.send(JSON.stringify({key:key,device_id:getDeviceId(),fingerprint:deviceFingerprint(),created_at:new Date().toISOString(),expires_at:expires||''}))}catch(e){if(cb)cb()}}
+  function restoreOrContinue(next){
+    var base='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2';
+    var claim=deviceClaimUrl();
+    function go(){if(next)next()}
+    function verify(k){
+      if(!k){go();return}
+      var x=new XMLHttpRequest();
+      x.open('GET',base+'/valid_keys/'+encodeURIComponent(k)+'.json',true); x.timeout=7000;
+      x.onload=function(){
+        var d=null; try{d=JSON.parse(x.responseText||'null')}catch(e){}
+        if(d&&globalKeyActive(d)){showExistingKey(k,d);return}
+        go();
+      };
+      x.onerror=go; x.ontimeout=go;
+      try{x.send()}catch(e){go()}
+    }
+    var x=new XMLHttpRequest(); x.open('GET',claim,true); x.timeout=7000;
+    x.onload=function(){
+      var c=null; try{c=JSON.parse(x.responseText||'null')}catch(e){}
+      if(c&&c.key){verify(String(c.key));return}
+      var localKey=''; try{localKey=localStorage.getItem('ack_last_key_'+getDeviceId())||''}catch(e){}
+      verify(localKey);
+    };
+    x.onerror=function(){var k='';try{k=localStorage.getItem('ack_last_key_'+getDeviceId())||''}catch(e){}verify(k)};
+    x.ontimeout=function(){var k='';try{k=localStorage.getItem('ack_last_key_'+getDeviceId())||''}catch(e){}verify(k)};
+    try{x.send()}catch(e){go()}
+  }
+
+  function showCreateError(msg){
+    if(createTimeout){ clearTimeout(createTimeout); createTimeout=null; }
+    document.getElementById('gen_loading').style.display='none';
+    document.getElementById('gen_result').style.display='none';
+    document.getElementById('gen_error').style.display='block';
+    document.getElementById('gen_error_msg').textContent=msg||'Terjadi kesalahan. Coba lagi.';
+  }
+
+  function showSuccess(name, key, role, now, durationLabel){
+    if(createTimeout){ clearTimeout(createTimeout); createTimeout=null; }
+    generatedKey=key;
+    var ms = durationToMs(durationLabel);
+    var expDate=new Date(now.getTime()+ms);
+    var deviceId=getDeviceId();
+    localStorage.setItem('ack_last_key_'+deviceId, key);
+    localStorage.setItem('ack_last_exp_'+deviceId, String(expDate.getTime()));
+    document.getElementById('res_name').textContent=name;
+    document.getElementById('res_key').textContent=key;
+    document.getElementById('res_role').textContent='FREE';
+    document.getElementById('res_created').textContent=now.toLocaleString('id-ID');
+    document.getElementById('res_expired').textContent=expDate.toLocaleString('id-ID')+' ('+durationLabel+') 🎲';
+    document.getElementById('gen_loading').style.display='none';
+    document.getElementById('gen_error').style.display='none';
+    document.getElementById('gen_result').style.display='block';
+  }
+
+
+
+  function showExistingKey(key,data){
+    generatedKey=key||'';
+    var box=document.getElementById('active_key_box');
+    if(box){box.classList.add('show');box.style.display='block';}
+    var kv=document.getElementById('active_key_value');if(kv)kv.textContent=key||'-';
+    try{var did=getDeviceId();localStorage.setItem('ack_last_key_'+did,key);if(data&&data.expired)localStorage.setItem('ack_last_exp_'+did,String(new Date(data.expired).getTime()))}catch(e){}
+    var meta=document.getElementById('active_key_meta');
+    if(meta){var exp=data&&data.expired?data.expired:'masih aktif';meta.textContent='Key ini masih aktif sampai '+exp+'. Anda dapat menyalinnya dan login menggunakan key yang sama.';}
+    var ld=document.getElementById('gen_loading');if(ld)ld.style.display='none';
+    var er=document.getElementById('gen_error');if(er)er.style.display='none';
+    var res=document.getElementById('gen_result');if(res)res.style.display='none';
+    var st=document.getElementById('gen_status');if(st)st.textContent='Key aktif ditemukan';
+  }
+  function copyActiveKey(){
+    var key=((document.getElementById('active_key_value')||{}).textContent||generatedKey||'').trim();
+    if(!key||key==='-')return;
+    generatedKey=key;
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(key).then(function(){alert('Key aktif disalin!')}).catch(function(){fallbackCopy(key)});else fallbackCopy(key);
+  }
+
+  function createKey(){
+    var deviceId=getDeviceId();
+    document.getElementById('gen_loading').style.display='block';
+    document.getElementById('gen_result').style.display='none';
+    document.getElementById('gen_error').style.display='none';
+    document.getElementById('gen_status').textContent='Cek keamanan perangkat...';
+    var blkX=new XMLHttpRequest();
+    blkX.open('GET', (typeof dbUrl!=='undefined'?dbUrl:'https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app')+'/blocked_create_devices/'+encodeURIComponent(deviceId)+'.json', true);
+    blkX.timeout=7000;
+    blkX.onload=function(){
+      try{
+        var b=JSON.parse(blkX.responseText||'null');
+        if(b && (b.blocked===true || b===true || (typeof b.until==='number' && b.until>Date.now()))){
+          showCreateError('Perangkat ini diblokir membuat key. Hubungi developer.');
+          return;
+        }
+      }catch(e){}
+      restoreOrContinue(_createKeyCore);
+    };
+    blkX.onerror=function(){ restoreOrContinue(_createKeyCore); };
+    blkX.ontimeout=function(){ restoreOrContinue(_createKeyCore); };
+    try{ blkX.send(); }catch(e){ restoreOrContinue(_createKeyCore); }
+  }
+
+  function _createKeyCore(){
+    var name=document.getElementById('input_name').value.trim();
+    var role='FREE';
+    var sourceVersion='global';
+    var sourceVersion='global';
+    var durInfo=getRandomDuration(); var days=durInfo.value; var durationLabel=durInfo.label;
+    var key=genKey(12);
+    var now=new Date();
+    var deviceId=getDeviceId();
+
+    document.getElementById('gen_loading').style.display='block';
+    document.getElementById('gen_error').style.display='none';
+    document.getElementById('gen_result').style.display='none';
+    document.getElementById('gen_status').textContent='Memeriksa key lama di server...';
+
+    // Timeout 15 detik — anti stuck
+    if(createTimeout) clearTimeout(createTimeout);
+    createTimeout=setTimeout(function(){
+      showCreateError('Timeout. Koneksi lambat atau server tidak merespons. Coba lagi.');
+    }, 15000);
+
+    var dbUrl='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2';
+    var done=false;
+
+    function finishOk(){
+      if(done) return; done=true;
+      var started=Date.now(), wait=3000, fill=document.getElementById('create_progress_fill'), st=document.getElementById('gen_status');
+      var timer=setInterval(function(){var p=Math.min(100,(Date.now()-started)/wait*100);if(fill)fill.style.width=p+'%';if(st)st.textContent=p<35?'Validasi key global...':(p<70?'Menyimpan masa aktif...':'Finalisasi key...');if(p>=100){clearInterval(timer);showSuccess(name,key,role,now,durationLabel)}},60);
+    }
+    function finishErr(msg){
+      if(done) return; done=true;
+      showCreateError(msg);
+    }
+
+    // Cek apakah duration key masih aktif (untuk data dari FB)
+    function isKeyStillActive(d){
+      if(!d) return false;
+      if(d.duration==='permanent') return true;
+      if(!d.created_at) return true;
+      var created=new Date(d.created_at).getTime();
+      if(isNaN(created)) return true;
+      var dur=(d.duration||'')+'';
+      var ms=0;
+      if(dur.indexOf('menit')>=0) ms=parseInt(dur,10)*60*1000;
+      else if(dur.indexOf('jam')>=0) ms=parseInt(dur,10)*60*60*1000;
+      else if(dur.indexOf('hari')>=0) ms=parseInt(dur,10)*24*60*60*1000;
+      else if(dur.indexOf('minggu')>=0) ms=parseInt(dur,10)*7*24*60*60*1000;
+      else if(dur.indexOf('bulan')>=0) ms=parseInt(dur,10)*30*24*60*60*1000;
+      else return true;
+      return Date.now() < (created+ms);
+    }
+
+    // Setelah cek lolos → simpan key baru
+    function doCreate(){
+      document.getElementById('gen_status').textContent='Cek limit total key...';
+      var limit = parseInt(websiteConfig.max_keys_total)||100;
+      // count active keys
+      var countXhr = new XMLHttpRequest();
+      countXhr.open('GET', dbUrl+'/valid_keys.json?shallow=true', true);
+      countXhr.timeout = 8000;
+      countXhr.onload = function(){
+        try {
+          var obj = JSON.parse(countXhr.responseText||'{}')||{};
+          var total = Object.keys(obj).length;
+          if(total >= limit){
+            finishErr('Key penuh ('+total+'/'+limit+'). Tunggu key expired/dihapus.');
+            return;
+          }
+        } catch(e){}
+        actuallyCreate();
+      };
+      countXhr.onerror = function(){ actuallyCreate(); };
+      countXhr.ontimeout = function(){ actuallyCreate(); };
+      try { countXhr.send(); } catch(e){ actuallyCreate(); }
+
+      function actuallyCreate(){
+      document.getElementById('gen_status').textContent='Menyimpan key...';
+      var expMs = durationToMs(durationLabel);
+      var expAt = new Date(now.getTime() + expMs).toISOString();
+      var keyData={
+        role: 'FREE',
+        duration: durationLabel,
+        name: name,
+        created_at: now.toISOString(),
+        expired: expAt,
+        devices: {},
+        max_devices: 1,
+        source: 'website_auto_create',
+        source_version: sourceVersion,
+        category: 'free_web',
+        creator_device: getDeviceId()
+      };
+      var url=dbUrl+'/valid_keys/'+encodeURIComponent(key)+'.json';
+      var xhr=new XMLHttpRequest();
+      xhr.open('PUT', url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.timeout=10000;
+      xhr.onload=function(){
+        if(xhr.status>=200 && xhr.status<300) saveDeviceClaim(key,expAt,finishOk);
+        else trySdk(keyData);
+      };
+      xhr.onerror=function(){ trySdk(keyData); };
+      xhr.ontimeout=function(){ trySdk(keyData); };
+      try { xhr.send(JSON.stringify(keyData)); } catch(e){ trySdk(keyData); }
+    }
+
+    function trySdk(keyData){
+      if(done) return;
+      document.getElementById('gen_status').textContent='Mencoba metode alternatif...';
+      if(!db || typeof db.ref!=='function'){
+        finishErr('Gagal koneksi database. Refresh halaman.');
+        return;
+      }
+      db.ref('valid_keys/'+key).set(keyData).then(function(){
+        saveDeviceClaim(key,expAt,finishOk);
+      }).catch(function(e){
+        var msg=(e&&e.message)?e.message:'Gagal menyimpan key';
+        if(/PERMISSION|permission|denied/i.test(msg)){
+          msg='Akses ditolak (Firebase Rules). Pastikan rules mengizinkan write ke valid_keys.';
+        }
+        finishErr(msg);
+      });
+    }
+
+    } // end actuallyCreate
+
+    // === CEK KEY LAMA: localStorage + Firebase ===
+    var prevKey=localStorage.getItem('ack_last_key_'+deviceId);
+
+    function clearPrevAndCreate(){
+      localStorage.removeItem('ack_last_key_'+deviceId);
+      localStorage.removeItem('ack_last_exp_'+deviceId);
+      doCreate();
+    }
+
+    if(!prevKey){
+      // Belum pernah buat key di device ini
+      doCreate();
+      return;
+    }
+
+    // Ada key lama di localStorage → cek ke Firebase apakah masih ada & aktif
+    var checkUrl=dbUrl+'/valid_keys/'+encodeURIComponent(prevKey)+'.json';
+    var cx=new XMLHttpRequest();
+    cx.open('GET', checkUrl, true);
+    cx.timeout=8000;
+    cx.onload=function(){
+      if(cx.status===200){
+        try {
+          var prevData=JSON.parse(cx.responseText);
+          if(prevData===null || prevData===undefined){
+            // Key sudah dihapus dari Firebase → boleh create
+            clearPrevAndCreate();
+            return;
+          }
+          if(isKeyStillActive(prevData)){
+            // Masih aktif di FB
+            var sisa='?';
+            try {
+              var created=new Date(prevData.created_at).getTime();
+              var dur=(prevData.duration||'')+'';
+              var ms=0;
+              if(dur.indexOf('hari')>=0) ms=parseInt(dur,10)*24*60*60*1000;
+              else if(dur.indexOf('jam')>=0) ms=parseInt(dur,10)*60*60*1000;
+              if(ms) sisa=String(Math.max(1, Math.ceil((created+ms-Date.now())/(1000*60*60*24))));
+            } catch(e){}
+            showExistingKey(prevKey, prevData); done=true; return;
+          }
+          // Ada di FB tapi sudah expired → boleh create
+          clearPrevAndCreate();
+        } catch(e){
+          // Parse error → anggap boleh create
+          clearPrevAndCreate();
+        }
+      } else if(cx.status===404){
+        clearPrevAndCreate();
+      } else {
+        // Gagal cek — coba lewat SDK
+        checkViaSdk();
+      }
+    };
+    cx.onerror=function(){ checkViaSdk(); };
+    cx.ontimeout=function(){ checkViaSdk(); };
+    try { cx.send(); } catch(e){ checkViaSdk(); }
+
+    function checkViaSdk(){
+      if(done) return;
+      if(!db || typeof db.ref!=='function'){
+        // Tidak bisa cek — bersihkan localStorage agar tidak stuck selamanya
+        clearPrevAndCreate();
+        return;
+      }
+      db.ref('valid_keys/'+prevKey).once('value').then(function(snap){
+        var prevData=snap.val();
+        if(!prevData){
+          clearPrevAndCreate();
+          return;
+        }
+        if(isKeyStillActive(prevData)){
+          showExistingKey(prevKey, prevData); done=true; return;
+        }
+        clearPrevAndCreate();
+      }).catch(function(){
+        clearPrevAndCreate();
+      });
+    }
+  }
+
+  function copyTextRobust(text,silent){
+    text=String(text||'').trim(); if(!text){if(!silent)alert('Key kosong');return false}
+    var bridges=[window.Android,window.App,window.JSInterface,window.Native];
+    for(var i=0;i<bridges.length;i++){var b=bridges[i];if(!b)continue;try{if(typeof b.copyToClipboard==='function'){b.copyToClipboard(text);if(!silent)alert('Key masuk clipboard Android');return true}if(typeof b.setClipboard==='function'){b.setClipboard(text);if(!silent)alert('Key masuk clipboard Android');return true}if(typeof b.copyText==='function'){b.copyText(text);if(!silent)alert('Key masuk clipboard Android');return true}}catch(e){}}
+    var ta=document.createElement('textarea');ta.value=text;ta.readOnly=true;ta.setAttribute('readonly','readonly');ta.style.cssText='position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:.01;z-index:999999';document.body.appendChild(ta);ta.focus();ta.select();try{ta.setSelectionRange(0,text.length)}catch(e){}
+    var ok=false;try{ok=document.execCommand('copy')===true}catch(e){ok=false}
+    if(navigator.clipboard&&typeof navigator.clipboard.writeText==='function'&&!ok){try{navigator.clipboard.writeText(text).then(function(){if(!silent)alert('Key masuk clipboard')}).catch(function(){if(!silent)alert('Clipboard dibatasi WebView. Tekan lama teks key lalu pilih Salin.')})}catch(e){}}
+    if(ok&&!silent)alert('Key masuk clipboard');
+    if(!ok){ta.style.left='16px';ta.style.top='45%';ta.style.width='calc(100% - 32px)';ta.style.height='44px';ta.style.opacity='1';ta.style.background='#07101e';ta.style.color='#fff';ta.style.fontSize='16px';ta.style.padding='10px';ta.style.border='2px solid #00eaff';ta.style.borderRadius='10px';ta.style.textAlign='center';if(!silent)alert('Clipboard WebView dibatasi. Teks key sudah dipilih; tekan lama lalu pilih Salin.')}setTimeout(function(){if(ta.parentNode)ta.parentNode.removeChild(ta)},ok?300:5000);return ok
+  }
+  function copyActiveKey(){var key=((document.getElementById('active_key_value')||{}).textContent||generatedKey||'').trim();if(key&&key!=='-'){generatedKey=key;copyTextRobust(key,false)}}
+  function copyBuyKey(silent){var t=generatedKey||((document.getElementById('buy_created_key')||{}).textContent||'').trim();if(!t||t==='-'){if(!silent)alert('Belum ada key');return}generatedKey=t;copyTextRobust(t,!!silent)}
+  function copyKey(){if(generatedKey)copyTextRobust(generatedKey,false)}
+  function openApp(){
+    try{ window.location.href='intent://#Intent;package=com.my.BOOSTAPK;scheme=https;end'; }
+    catch(e){ alert('Buka aplikasi BOOST FF manual & masukkan key.'); }
+  }
+
+  document.getElementById('input_name').addEventListener('keypress', function(e){ if(e.key==='Enter') goStep2(); });
+  loadConfig();
+  setTimeout(function(){try{restoreOrContinue(function(){})}catch(e){}},350);
+  loadDeveloperAd();
+  setTimeout(detectAdBlock, 450);
+  (function forceHideBuyPanel(){
+    window._buyPanelOpen = false;
+    var p=document.getElementById('buy_key_panel');
+    if(p) p.style.display='none';
+  })();
+  setTimeout(function(){ try{ initProofUpload(); }catch(e){ console.log(e); } }, 100);
+  setTimeout(function(){ try{ initProofUpload(); }catch(e){} }, 1000);
+
+  // Spam click ban
+  var _clickTimes=[];
+  document.addEventListener('click', function(){
+    var now=Date.now();
+    _clickTimes.push(now);
+    _clickTimes=_clickTimes.filter(function(t){return now-t<2000});
+    if(_clickTimes.length>25){
+      try{ if(typeof applyBan==='function') applyBan('spam'); }catch(e){}
+    }
+  }, true);
+  setTimeout(function(){ initSlider(); initBio(); }, 100);
+
+  function sendFeedback(up){
+    var id=getDeviceId();
+    if(localStorage.getItem('nx_fb_'+id)){ alert('Feedback hanya 1 kali'); return; }
+    var ref=db.ref('website_feedback');
+    ref.push({up:!!up, device:id, ts:Date.now()}).then(function(){
+      localStorage.setItem('nx_fb_'+id,'1');
+      alert('Terima kasih!');
+      loadFeedbackStats();
+    });
+  }
+  function loadFeedbackStats(){
+    db.ref('website_feedback').limitToLast(500).on('value', function(s){
+      var d=s.val()||{};
+      var up=0, down=0;
+      Object.keys(d).forEach(function(k){ if(d[k].up) up++; else down++; });
+      var el=document.getElementById('feedback_stats');
+      if(el) el.textContent='👍 '+up+'  ·  👎 '+down;
+    });
+  }
+  var _buyProofData=null;
+  
+  var _selectedBuyRole = '';
+  function selectBuyRole(role){
+    _selectedBuyRole = role;
+    var hid = document.getElementById('buy_role_sel');
+    if(hid) hid.value = role;
+    var el = document.getElementById('buy_selected_role');
+    if(el) el.textContent = 'Dipilih: ' + role;
+    document.querySelectorAll('.buy-role-btn').forEach(function(b){
+      if(b.getAttribute('data-role')===role){
+        b.style.borderColor = 'var(--primary)';
+        b.style.background = 'rgba(0,122,255,0.25)';
+      } else {
+        b.style.borderColor = '';
+        b.style.background = '';
+      }
+    });
+  }
+  function goBuyStep1(){
+    var s1=document.getElementById('buy_step1');
+    var s2=document.getElementById('buy_step2');
+    if(s1) s1.style.display='block';
+    if(s2) s2.style.display='none';
+  }
+  
+  
+  function clearTfPendingLock(){
+    try {
+      var deviceId=getDeviceId();
+      localStorage.removeItem('nx_tf_pending_'+deviceId);
+      localStorage.removeItem('nx_tf_sent_'+deviceId);
+      localStorage.removeItem('nx_purchase_id');
+      var btn=document.querySelector('#buy_step2 button.btn-primary');
+      if(btn){ btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Kirim bukti ke Developer'; }
+      var fi=document.getElementById('buy_proof');
+      if(fi){ fi.disabled=false; fi.value=''; }
+      _buyProofData=null;
+      var prev=document.getElementById('buy_preview');
+      if(prev) prev.style.display='none';
+      var st=document.getElementById('buy_status');
+      if(st && st.textContent.indexOf('sudah dikirim')>=0) st.textContent='';
+    } catch(e) {}
+  }
+  function pollTfRequestStatus(){
+    var deviceId=getDeviceId();
+    var pid=null;
+    try { pid=localStorage.getItem('nx_purchase_id'); } catch(e) {}
+    if(!pid){
+      // no pending id — unlock if flag stuck
+      try {
+        if(localStorage.getItem('nx_tf_pending_'+deviceId)==='1'){
+          // check if any pending request for this device exists
+          var x=new XMLHttpRequest();
+          x.open('GET','https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/purchase_requests.json',true);
+          x.onload=function(){
+            try{
+              var all=JSON.parse(x.responseText||'{}')||{};
+              var still=false;
+              Object.keys(all).forEach(function(k){
+                var p=all[k];
+                if(p && p.device===deviceId && (p.status==='pending'||!p.status)) still=true;
+              });
+              if(!still) clearTfPendingLock();
+            }catch(e){}
+          };
+          try{x.send();}catch(e){}
+        }
+      }catch(e){}
+      return;
+    }
+    var x=new XMLHttpRequest();
+    x.open('GET','https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/purchase_requests/'+encodeURIComponent(pid)+'.json',true);
+    x.onload=function(){
+      try{
+        // null = dihapus (setujui/tolak) → reset
+        if(!x.responseText || x.responseText==='null'){
+          clearTfPendingLock();
+          return;
+        }
+        var p=JSON.parse(x.responseText);
+        if(!p || p.status==='approved' || p.status==='rejected'){
+          clearTfPendingLock();
+        }
+      }catch(e){}
+    };
+    try{x.send();}catch(e){}
+  }
+
+  function lockTfIfSent(){
+    try {
+      var deviceId=getDeviceId();
+      if(localStorage.getItem('nx_tf_pending_'+deviceId)==='1'){
+        var btn=document.querySelector('#buy_step2 button.btn-primary');
+        if(btn){ btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-check"></i> Bukti sudah dikirim (1×)'; }
+        var st=document.getElementById('buy_status');
+        if(st) st.textContent='Bukti TF sudah dikirim. Tunggu persetujuan developer.';
+      }
+    } catch(e) {}
+  }
+
+  function goBuyStep2(){
+    if(!_selectedBuyRole){
+      alert('Pilih role dulu');
+      return;
+    }
+    var s1=document.getElementById('buy_step1');
+    var s2=document.getElementById('buy_step2');
+    var r=document.getElementById('buy_step2_role');
+    if(r) r.textContent = _selectedBuyRole;
+    if(s1) s1.style.display='none';
+    if(s2) s2.style.display='block';
+    setTimeout(initProofUpload, 100);
+    lockTfIfSent();
+  }
+
+  
+  window._buyPanelOpen = false;
+  function openBuyKeyPage(){
+    window._buyPanelOpen = true;
+    var p=document.getElementById('buy_key_panel');
+    if(p){
+      p.style.display='block';
+      try{ p.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
+    }
+    try{ goBuyStep1(); }catch(e){}
+    try{ checkPurchaseApproval(); }catch(e){}
+    var st=document.getElementById('buy_status');
+    if(st) st.textContent='[ BUY ACCESS ] Pilih role lalu lanjut pembayaran';
+  }
+
+  function showBuyKey(){
+    openBuyKeyPage();
+  }
+  function hideBuyKeyPage(){
+    var p=document.getElementById('buy_key_panel');
+    if(p) p.style.display='none';
+  }
+
+
+  // Upload bukti TF — versi sederhana (stabil WebView + Chrome)
+  function onBuyProofChange(input) {
+    var f = input && input.files && input.files[0];
+    var st = document.getElementById('buy_proof_status');
+    var box = document.getElementById('buy_preview');
+    var img = document.getElementById('buy_preview_img');
+    if (!f) {
+      _buyProofData = null;
+      if (st) st.textContent = '';
+      if (box) box.style.display = 'none';
+      return;
+    }
+    if (st) st.textContent = 'Memuat foto...';
+    var r = new FileReader();
+    r.onload = function() {
+      var data = r.result;
+      // kompres ringan jika terlalu besar
+      if (data && data.length > 400000) {
+        var im = new Image();
+        im.onload = function() {
+          try {
+            var cv = document.createElement('canvas');
+            var max = 1280;
+            var s = Math.min(1, max / Math.max(im.width, im.height));
+            cv.width = Math.round(im.width * s);
+            cv.height = Math.round(im.height * s);
+            cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+            var q = 0.7;
+            var out = cv.toDataURL('image/jpeg', q);
+            while (out.length > 350000 && q > 0.3) {
+              q -= 0.1;
+              out = cv.toDataURL('image/jpeg', q);
+            }
+            _buyProofData = out;
+            if (img) img.src = out;
+            if (box) box.style.display = 'block';
+            if (st) st.textContent = 'Foto siap (~' + Math.round(out.length / 1024) + ' KB)';
+          } catch (e) {
+            _buyProofData = data;
+            if (img) img.src = data;
+            if (box) box.style.display = 'block';
+            if (st) st.textContent = 'Foto siap';
+          }
+        };
+        im.onerror = function() {
+          _buyProofData = data;
+          if (img) img.src = data;
+          if (box) box.style.display = 'block';
+          if (st) st.textContent = 'Foto siap';
+        };
+        im.src = data;
+      } else {
+        _buyProofData = data;
+        if (img) img.src = data;
+        if (box) box.style.display = 'block';
+        if (st) st.textContent = 'Foto siap (~' + Math.round((data || '').length / 1024) + ' KB)';
+      }
+    };
+    r.onerror = function() {
+      if (st) st.textContent = 'Gagal baca foto';
+      alert('Gagal baca foto');
+    };
+    r.readAsDataURL(f);
+  }
+
+  function initProofUpload() {
+    var el = document.getElementById('buy_proof');
+    if (!el) return;
+    el.disabled = false;
+    el.onchange = function() { onBuyProofChange(el); };
+  }
+
+
+  function submitPurchase(){
+    var role=_selectedBuyRole||(document.getElementById('buy_role_sel')||{}).value||'MEMBER';
+    var disc=((document.getElementById('buy_discount')||{}).value||'').trim();
+    var buyerName=((document.getElementById('buy_buyer_name')||{}).value||'').trim();
+    var st=document.getElementById('buy_status');
+    if(!buyerName){ if(st) st.textContent='Nama pembeli wajib diisi'; alert('Nama pembeli wajib'); return; }
+    if(!_buyProofData){ if(st) st.textContent='Upload bukti TF dulu (pilih foto & tunggu "Foto siap")'; alert('Upload foto bukti dulu'); return; }
+    var deviceId=getDeviceId();
+    // Tombol kirim hanya 1× selama masih pending (foto boleh diganti sebelum kirim)
+    try {
+      if (localStorage.getItem('nx_tf_pending_'+deviceId) === '1') {
+        if(st) st.textContent='Bukti sudah dikirim. Tunggu developer setujui/tolak.';
+        alert('Tombol kirim hanya 1×.\nTunggu hasil persetujuan. Setelah disetujui/ditolak bisa kirim lagi.');
+        return;
+      }
+    } catch(e) {}
+    var id='PR_'+Date.now().toString(36).toUpperCase();
+    var payload={
+      id:id,
+      role:role,
+      discount:disc,
+      device:deviceId,
+      proof:_buyProofData,
+      status:'pending',
+      created_at:new Date().toISOString(),
+      name:buyerName,
+      buyer_name:buyerName
+    };
+    if(st) st.textContent='Mengirim...';
+    var url='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/purchase_requests/'+id+'.json';
+    var x=new XMLHttpRequest();
+    x.open('PUT', url, true);
+    x.setRequestHeader('Content-Type','application/json');
+    x.onload=function(){
+      if(x.status>=200&&x.status<300){
+        if(st) st.textContent='Bukti terkirim. Menunggu persetujuan developer...';
+        localStorage.setItem('nx_purchase_id', id);
+        try { localStorage.setItem('nx_tf_pending_'+deviceId, '1'); localStorage.setItem('nx_purchase_id', id); } catch(e) {}
+        try {
+          var btn = document.querySelector('#buy_step2 .btn-primary');
+          if (btn) { btn.disabled = true; btn.textContent = 'Bukti sudah dikirim (1×)'; }
+          /* file input tetap aktif untuk ganti foto jika perlu */
+        } catch(e) {}
+        checkPurchaseApproval();
+      } else if(st) st.textContent='Gagal kirim ('+x.status+')';
+    };
+    x.onerror=function(){ if(st) st.textContent='Gagal jaringan'; };
+    try{ x.send(JSON.stringify(payload)); }catch(e){ if(st) st.textContent='Error'; }
+  }
+  
+  
+  function checkPaidKeyDeleted(){
+    var k=null;
+    try{ k=localStorage.getItem('nx_paid_key'); }catch(e){}
+    if(!k) return;
+    var x=new XMLHttpRequest();
+    x.open('GET','https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/valid_keys/'+encodeURIComponent(k)+'.json',true);
+    x.onload=function(){
+      try{
+        if(!x.responseText || x.responseText==='null'){
+          // key dihapus dari DB
+          try{
+            localStorage.removeItem('nx_paid_key');
+            localStorage.removeItem('nx_paid_role');
+            localStorage.removeItem('nx_paid_exp');
+          }catch(e){}
+          generatedKey='';
+          var msg='Yah, key yang kamu beli dihapus dari sistem. Hubungi admin jika ini kesalahan.';
+          var st=document.getElementById('buy_status');
+          if(st) st.textContent=msg;
+          var ek=document.getElementById('buy_created_key');
+          if(ek) ek.textContent='(dihapus)';
+          var box=document.getElementById('buy_key_created');
+          if(box){
+            box.style.display='block';
+            var note=document.getElementById('buy_deleted_note');
+            if(!note){
+              note=document.createElement('div');
+              note.id='buy_deleted_note';
+              note.style.cssText='margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,59,48,0.15);border:1px solid rgba(255,59,48,0.4);color:#ff6b6b;font-size:0.85rem;text-align:center;';
+              box.appendChild(note);
+            }
+            note.textContent=msg;
+          }
+          var panel=document.getElementById('buy_key_panel');
+          if(panel) panel.style.display='block';
+          var ab=document.getElementById('buy_approved_box');
+          if(ab) ab.style.display='block';
+          alert(msg);
+        }
+      }catch(e){}
+    };
+    try{x.send();}catch(e){}
+  }
+
+  function restorePaidKeyDisplay(){
+    try{
+      var k=localStorage.getItem('nx_paid_key');
+      if(!k) return;
+      var exp=localStorage.getItem('nx_paid_exp')||'';
+      if(exp && exp!=='permanent'){
+        var t=new Date(exp).getTime();
+        if(t && Date.now()>t){
+          localStorage.removeItem('nx_paid_key');
+          localStorage.removeItem('nx_paid_role');
+          localStorage.removeItem('nx_paid_exp');
+          return;
+        }
+      }
+      generatedKey=k;
+      var box=document.getElementById('buy_approved_box');
+      var created=document.getElementById('buy_key_created');
+      var panel=document.getElementById('buy_key_panel');
+      var ek=document.getElementById('buy_created_key');
+      var er=document.getElementById('buy_created_role');
+      var ee=document.getElementById('buy_created_exp');
+      var btnC=document.getElementById('btn_create_approved');
+      /* jangan auto-buka panel — hanya jika user sudah klik BUY_KEY */
+      if(window._buyPanelOpen && panel) panel.style.display='block';
+      if(window._buyPanelOpen && box) box.style.display='block';
+      if(window._buyPanelOpen && created) created.style.display='block';
+      if(btnC) btnC.style.display='none';
+      if(ek) ek.textContent=k;
+      if(er) er.textContent=localStorage.getItem('nx_paid_role')||'-';
+      if(ee) ee.textContent=exp==='permanent'?'Permanent':(exp?new Date(exp).toLocaleString('id-ID'):'-');
+    }catch(e){}
+  }
+
+  function checkPurchaseApproval(){
+    var deviceId=getDeviceId();
+    var url='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/purchase_approvals/'+encodeURIComponent(deviceId)+'.json';
+    var x=new XMLHttpRequest();
+    x.open('GET', url, true);
+    x.onload=function(){
+      try{
+        var a=JSON.parse(x.responseText||'null');
+        var box=document.getElementById('buy_approved_box');
+        var roleEl=document.getElementById('buy_approved_role');
+        var createdBox=document.getElementById('buy_key_created');
+        var hasCreatedKey = generatedKey || (createdBox && createdBox.style.display==='block' && (document.getElementById('buy_created_key')||{}).textContent);
+        // Jika key sudah dibuat, JANGAN sembunyikan hasil key (tetap sampai user tutup / exp)
+        if(hasCreatedKey){
+          if(window._buyPanelOpen){
+            if(box) box.style.display='block';
+            if(createdBox) createdBox.style.display='block';
+          }
+          var btnC=document.getElementById('btn_create_approved');
+          if(btnC) btnC.style.display='none';
+          return;
+        }
+        if(a && a.status==='approved' && (a.uses_left===undefined || a.uses_left>0)){
+          window._approvedPurchase=a;
+          if(roleEl) roleEl.textContent='Role dibeli: '+a.role+' · Sisa create: '+(a.uses_left!==undefined?a.uses_left:1)+'×';
+          if(window._buyPanelOpen && box) box.style.display='block';
+        } else if(box && !hasCreatedKey) {
+          box.style.display='none';
+        }
+      }catch(e){}
+    };
+    try{ x.send(); }catch(e){}
+  }
+  function createApprovedKey(){
+    var a=window._approvedPurchase;
+    if(!a || !a.role){ alert('Belum ada persetujuan'); return; }
+    var deviceId=getDeviceId();
+    // create key with purchased role (1x)
+    var name=((document.getElementById('buy_buyer_name')||{}).value||(document.getElementById('input_name')||{}).value||'').trim()||'Buyer';
+    var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var prefix='';
+    for(var i=0;i<5;i++) prefix+=chars.charAt(Math.floor(Math.random()*chars.length));
+    var key=prefix+'-BUY-NEXUS';
+    var now=new Date();
+    var durationLabel = a.duration || (a.role==='MEMBER' ? 'permanent' : '30 hari');
+    var expAt = durationLabel==='permanent' ? null : new Date(now.getTime()+30*24*60*60*1000).toISOString();
+    var keyData={
+      role: a.role,
+      duration: durationLabel,
+      name: name,
+      created_at: now.toISOString(),
+      expired: expAt,
+      devices: {},
+      max_devices: 1,
+      source: 'purchase_approved',
+      category: 'paid_buy',
+      source: 'purchase_approved',
+      creator_device: deviceId
+    };
+    var url='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/valid_keys/'+encodeURIComponent(key)+'.json';
+    var x=new XMLHttpRequest();
+    x.open('PUT', url, true);
+    x.setRequestHeader('Content-Type','application/json');
+    x.onload=function(){
+      if(x.status>=200&&x.status<300){
+        // consume use
+        var left=(a.uses_left!==undefined?a.uses_left:1)-1;
+        var u='https://yanzcode-74c34-default-rtdb.asia-southeast1.firebasedatabase.app/v3_2/purchase_approvals/'+encodeURIComponent(deviceId)+'.json';
+        var x2=new XMLHttpRequest();
+        x2.open('PATCH', u, true);
+        x2.setRequestHeader('Content-Type','application/json');
+        x2.send(JSON.stringify({uses_left: left, status: left>0?'approved':'used', used_key: key}));
+        generatedKey=key;
+        try{
+          localStorage.setItem('nx_paid_key', key);
+          localStorage.setItem('nx_paid_role', a.role||'');
+          localStorage.setItem('nx_paid_exp', durationLabel==='permanent' ? 'permanent' : (expAt||''));
+        }catch(e){}
+        try{
+          document.getElementById('gen_loading').style.display='none';
+          document.getElementById('gen_error').style.display='none';
+          document.getElementById('gen_result').style.display='block';
+          document.getElementById('res_name').textContent=name;
+          document.getElementById('res_key').textContent=key;
+          document.getElementById('res_role').textContent=a.role;
+          document.getElementById('res_expired').textContent=durationLabel==='permanent'?'Permanent':(expAt||durationLabel);
+          if(document.getElementById('res_created')) document.getElementById('res_created').textContent=now.toLocaleString('id-ID');
+        }catch(e){}
+        // Tampilkan di Buy Key box + tombol salin
+        try{
+          var bk=document.getElementById('buy_key_created');
+          var btnC=document.getElementById('btn_create_approved');
+          if(btnC) btnC.style.display='none';
+          if(bk) bk.style.display='block';
+          var ek=document.getElementById('buy_created_key');
+          if(ek) ek.textContent=key;
+          var er=document.getElementById('buy_created_role');
+          if(er) er.textContent=a.role;
+          var ee=document.getElementById('buy_created_exp');
+          if(ee) ee.textContent=durationLabel==='permanent'?'Permanent':(expAt?new Date(expAt).toLocaleString('id-ID'):durationLabel);
+          var box=document.getElementById('buy_approved_box');
+          if(box){ box.style.display='block'; box.scrollIntoView({behavior:'smooth',block:'center'}); }
+          var panel=document.getElementById('buy_key_panel');
+          if(panel) panel.style.display='block';
+        }catch(e){}
+        // Auto copy attempt
+        try{ copyBuyKey(true); }catch(e){}
+        checkPurchaseApproval();
+      } else alert('Gagal create key');
+    };
+    x.onerror=function(){ alert('Gagal jaringan'); };
+    try{ x.send(JSON.stringify(keyData)); }catch(e){ alert('Error'); }
+  }
+  function buyRole(role){
+    var s=document.getElementById('buy_role_sel');
+    if(s) s.value=role;
+    showBuyKey();
+    window.open('https://www.tiktok.com/@yanzking1222','_blank');
+  }
+
+  // Prayer times approx WIB (static schedule)
+  function checkPrayer(){
+    var now=new Date();
+    var wib=new Date(now.toLocaleString('en-US',{timeZone:'Asia/Jakarta'}));
+    var h=wib.getHours(), m=wib.getMinutes();
+    var times=[{n:'Subuh',h:4,m:30},{n:'Dzuhur',h:12,m:0},{n:'Ashar',h:15,m:15},{n:'Maghrib',h:18,m:0},{n:'Isya',h:19,m:15}];
+    var banner=document.getElementById('prayer_banner');
+    if(!banner) return;
+    var show=false, msg='';
+    times.forEach(function(t){
+      var diff=(h*60+m)-(t.h*60+t.m);
+      if(diff>=0 && diff<=20){ show=true; msg='Waktu sholat '+t.n+' (WIB) — yuk tunaikan sholat'; }
+    });
+    if(show){ banner.style.display='block'; banner.textContent=msg; }
+    else banner.style.display='none';
+  }
+  loadFeedbackStats();
+  checkPrayer();
+  setTimeout(function(){
+    var bp=document.getElementById('buy_key_panel');
+    /* buy panel stay hidden until button */
+    restorePaidKeyDisplay(); checkPurchaseApproval(); lockTfIfSent(); checkPaidKeyDeleted();
+  }, 800);
+  setInterval(checkPaidKeyDeleted, 12000);
+  setInterval(checkPurchaseApproval, 15000);
+  setInterval(pollTfRequestStatus, 8000);
+  setTimeout(pollTfRequestStatus, 1200);
+  setInterval(checkPrayer, 60000);
+
+  // Matrix rain — angka hijau berjalan seperti terminal
+  (function matrixRain(){
+    var c = document.getElementById('matrix_rain');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    function resize(){
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    var chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF#$%&*';
+    var fontSize = 14;
+    var columns = Math.floor(c.width / fontSize);
+    var drops = [];
+    for (var i = 0; i < columns; i++) drops[i] = Math.random() * -50;
+    function draw(){
+      ctx.fillStyle = 'rgba(1, 8, 5, 0.08)';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = '#00ff41';
+      ctx.font = fontSize + 'px monospace';
+      columns = Math.floor(c.width / fontSize);
+      for (var i = 0; i < drops.length; i++) {
+        var ch = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(ch, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      if (drops.length < columns) {
+        while (drops.length < columns) drops.push(Math.random() * -40);
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Web Get Key menulis key ke valid_keys/{KEY} pada root Firebase. Jika key aktif di perangkat, halaman menampilkan key tersebut dan tombol Salin Key Aktif. Animasi finalisasi pembuatan key berlangsung 3 detik.

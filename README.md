@@ -52,3 +52,20 @@ Loader awal menggunakan radar CSS yang Anda berikan. Random code sekarang menggu
 ## Catatan media
 
 Media tidak disalin ke asset Sketchware. Ganti file di folder `assets/` repository GitHub dengan file asli, tanpa mengubah nama file. Pastikan GitHub mengizinkan akses raw dan file video/audio tidak memakai Git LFS pointer jika ingin diputar langsung oleh WebView.
+
+
+## v3.2 update
+
+File baru `crypto.html` dan `market-service.js` menambahkan halaman Market berbasis CoinPaprika public REST API. Harga tidak dibuat fallback; ketika API gagal, halaman menampilkan error state. `BUY` dan `SELL` hanya UI disabled. `firebase-v3.2-schema.json` mendokumentasikan `app_config.min_supported_version`, `disabled_versions`, dan `developer_ad`.
+
+`index.html` memuat Market melalui iframe `crypto.html`, menambahkan splash game animasi 10 detik tanpa video, iklan developer Firebase opsional, dan version gate. Untuk deploy ke GitHub, upload seluruh isi folder ini ke repository dengan `index.html` sebagai file inti.
+
+
+### Firebase import key safety
+
+Realtime Database tidak menerima titik pada nama key. Gunakan `app_config/versions/v3_1`, `v3_2`, dan `v3_2_1`; label versi sebenarnya disimpan pada field `version_label`. `valid_keys` tetap berada di root dan tidak boleh dihapus saat mengimpor konfigurasi versi.
+
+
+## Global key rule
+
+`valid_keys` dan `redeem_codes` adalah node global di root database. Jangan menaruh key di `app_config/versions`. Web Get Key menulis hanya ke `valid_keys/{KEY}`. Jika key global masih aktif, halaman menampilkan key tersebut dan tombol copy, bukan membuat key duplikat.

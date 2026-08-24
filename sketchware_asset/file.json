@@ -1,22 +1,33 @@
 {
   "app": "Nexus-X",
-  "version": "4.0.0",
-  "source_url": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/index.html",
-  "assets_base": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets",
-  "telegram_api_url": "https://YOUR-PHP-HOST.example/api/telegram.php",
+  "version": "3.2.0",
+  "source_url": "https://raw.githubusercontent.com/yansupport1/Nexus/main/index.html",
+  "assets_base": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets",
+  "telegram_api_url": "",
   "getkey_url": "",
   "assets": {
-    "card.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/card.mp4",
-    "box.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/box.mp4",
-    "start.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/start.mp4",
-    "background.mp4": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/background.mp4",
-    "start.mp3": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/start.mp3",
-    "musik.mp3": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/musik.mp3",
-    "fon.ttf": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/fon.ttf",
-    "logo.png": "https://raw.githubusercontent.com/USERNAME/REPOSITORY/main/assets/logo.png"
+    "card.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/card.mp4",
+    "box.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/box.mp4",
+    "start.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/start.mp4",
+    "background.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/background.mp4",
+    "start.mp3": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/start.mp3",
+    "musik.mp3": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/musik.mp3",
+    "fon.ttf": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/fon.ttf",
+    "logo.png": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/logo.png"
+  },
+  "market": {
+    "service": "coinpaprika",
+    "base_url": "https://api.coinpaprika.com/v1",
+    "vs_currency": "USD",
+    "refresh_seconds": 30,
+    "allow_trading": false
   },
   "telegram": {
-    "events": ["new_user", "new_key"],
+    "events": [
+      "new_user",
+      "new_key",
+      "quiz_win"
+    ],
     "token_in_client": false,
     "chat_id_in_client": false
   }
