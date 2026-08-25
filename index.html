@@ -2961,14 +2961,16 @@
 
 </style>
 
+        <style>
         /* Core Features shortcut: stays beside the Home-side floating tools button. */
         #features_fab{display:none!important;position:fixed;right:84px;bottom:88px;z-index:8500;width:56px;height:56px;border-radius:16px;border:2px solid rgba(255,255,255,.7);background:linear-gradient(145deg,#8b5cf6,#4f46e5);color:#fff;align-items:center;justify-content:center;font-size:21px;cursor:pointer;box-shadow:0 5px 0 #24206b,0 10px 25px rgba(79,70,229,.35);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
         #features_fab:active{transform:translateY(3px) scale(.96);box-shadow:0 2px 0 #24206b}
         body.nx-style-comic3d #features_fab{border:3px solid #000;background:linear-gradient(145deg,#ffcf33,#ff8a00);color:#111;box-shadow:5px 6px 0 #000,0 0 18px rgba(255,207,51,.35)}
         @media(max-width:430px){#features_fab{right:78px;width:50px;height:50px;border-radius:14px;font-size:19px}}
+        </style>
 
 </head>
-<body data-nexus-version="3.2.1" data-build="github-gateway">
+<body data-nexus-version="3.2" data-build="github-gateway">
     <div id="nx_boot_loader" aria-label="Loading Nexus-X"><div class="loader"><span></span></div><div class="loader_text">Connecting</div></div>
 
     <!-- NEXUS V3.1 PATCH MARKER: compatible source protection enabled -->
@@ -3175,7 +3177,7 @@
                     <div class="menu_divider"></div>
                 </div>
 
-                <div class="menu_item" id="menu_quiz_item" style="display:none;" onclick="close_menu();show_quiz_page()">
+                <div class="menu_item" id="menu_quiz_item" onclick="close_menu();show_quiz_page()">
                     <span class="icon"><i class="fa-solid fa-trophy"></i></span> Kuis Berhadiah
                 </div>
                 <div class="menu_item" onclick="close_menu();show_redeem_page()">
@@ -3206,7 +3208,7 @@
                     <span class="icon"><i class="fa-solid fa-sign-out-alt"></i></span> Logout
                 </div>
 
-                <div class="menu_version">Versi <span id="menu_version">3.2.1</span></div>
+                <div class="menu_version">Versi <span id="menu_version">3.2</span></div>
             </div>
 
             <!-- MAIN CONTENT -->
@@ -3312,11 +3314,6 @@
 
                 </div>
 
-
-                <!-- MARKET PAGE v3.2 — UI rendered by crypto.html -->
-                <div id="market_page">
-                    <iframe id="market_frame" class="market_frame" title="Nexus-X Market" loading="lazy" src="crypto.html?tab=market&v=3.2"></iframe>
-                </div>
 
                 <!-- FEATURES PAGE -->
                 <div id="features_page">
@@ -3705,17 +3702,15 @@
                     <div class="nav_item active" data-icon="fa-house" onclick="switch_tab(this,'home')">
                         <i class="fa-solid fa-house"></i><span>Home</span>
                     </div>
-                    <div class="nav_item" data-icon="fa-chart-line" onclick="switch_tab(this,'market')">
-                        <i class="fa-solid fa-chart-line"></i><span>Market</span>
+                    <div class="nav_item" data-icon="fa-sliders" onclick="switch_tab(this,'features')">
+                        <i class="fa-solid fa-sliders"></i><span>Features</span>
                     </div>
-                    <div class="nav_item" data-icon="fa-arrow-right-arrow-left" onclick="switch_tab(this,'trade')">
-                        <i class="fa-solid fa-arrow-right-arrow-left"></i><span>Trade</span>
+                    <div class="nav_item" data-icon="fa-mobile-screen" onclick="switch_tab(this,'device')">
+                        <i class="fa-solid fa-mobile-screen"></i><span>Device</span>
                     </div>
-                    <div class="nav_item" data-icon="fa-wallet" onclick="switch_tab(this,'wallet')">
-                        <i class="fa-solid fa-wallet"></i><span>Wallet</span>
-                    </div>
-                    <div class="nav_item" data-icon="fa-user" onclick="switch_tab(this,'account')">
-                        <i class="fa-solid fa-user"></i><span>Account</span>
+                    <div class="nav_item" data-icon="fa-address-book" onclick="switch_tab(this,'contact')">
+                        <i class="fa-solid fa-address-book"></i><span>Kontak</span>
+                        <span class="online_dot" id="nav_online_dot"></span>
                     </div>
                 </div>
             </nav>
@@ -8344,7 +8339,7 @@
             db.ref('quiz/active').on('value', function(s) {
                 var q = s.val();
                 var el = document.getElementById('menu_quiz_item');
-                if (el) el.style.display = (q && q.question) ? 'flex' : 'none';
+                if (el) el.style.display = 'flex';
             });
         }
         // AI Assistant (local, no API key)
