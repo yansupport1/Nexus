@@ -2988,6 +2988,21 @@ body.nx-style-comic3d .v33_page{background:#fff;color:#111}body.nx-style-comic3d
 .v33_sensi_rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0}.v33_sensi_row{display:flex;align-items:center;gap:7px;padding:8px 9px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(145,220,255,.18);font-size:11px}.v33_sensi_row b{color:#73dcff;min-width:24px}.v33_sensi_row input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-weight:800;text-align:right}.v33_sensi_actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.v33_sensi_actions .v33_btn{font-size:10px;padding:10px 6px}
 body.nx-style-comic3d .v33_sensi_row{background:#fff;border:2px solid #111;color:#111;box-shadow:2px 2px 0 #111}body.nx-style-comic3d .v33_sensi_row input{color:#111}body.nx-style-comic3d .v33_sensi_row b{color:#075f90}
 </style>
+<style id="nexus-v33-all-buttons">
+/* NEXUS_V33_ALL_BUTTONS_START */
+:root{--nx-liquid-border:rgba(255,255,255,.28);--nx-liquid-surface:rgba(255,255,255,.105);--nx-liquid-glow:rgba(37,211,255,.25)}
+button,.flutter-btn,.btn_login,.btn_get_key,.m_btn,.contact_btn,.icon_btn,.style_choice,.quick_item,.feature_item,.orb_act,.menu_item{ -webkit-tap-highlight-color:transparent }
+.flutter-btn,.btn_login,.btn_get_key,.m_btn,.contact_btn,.icon_btn,.style_choice,.v33_btn{position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--nx-liquid-border);background:linear-gradient(135deg,rgba(255,255,255,.17),rgba(255,255,255,.055)),linear-gradient(135deg,rgba(17,214,255,.55),rgba(57,87,255,.42));backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);box-shadow:0 7px 18px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.28),inset 0 -1px rgba(0,0,0,.15);transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.flutter-btn::before,.btn_login::before,.btn_get_key::before,.m_btn::before,.contact_btn::before,.icon_btn::before,.style_choice::before,.v33_btn::before{content:"";position:absolute;inset:-45% -20%;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.32) 48%,transparent 66%);transform:translateX(-60%) rotate(8deg);transition:transform .6s ease;pointer-events:none}
+.flutter-btn:hover::before,.btn_login:hover::before,.btn_get_key:hover::before,.m_btn:hover::before,.contact_btn:hover::before,.icon_btn:hover::before,.style_choice:hover::before,.v33_btn:hover::before{transform:translateX(60%) rotate(8deg)}
+.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:active,.contact_btn:active,.icon_btn:active,.style_choice:active,.v33_btn:active{transform:translateY(2px) scale(.985);filter:brightness(1.12);box-shadow:0 3px 10px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.24)}
+.toggle{position:relative!important;width:54px!important;height:30px!important;min-height:30px!important;padding:0!important;border-radius:99px!important;border:2px solid rgba(255,255,255,.34)!important;background:rgba(0,0,0,.32)!important;box-shadow:inset 0 2px 6px rgba(0,0,0,.34),0 4px 13px rgba(0,0,0,.18)!important;appearance:none;-webkit-appearance:none;cursor:pointer}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:linear-gradient(145deg,#fff,#b7d8e4);box-shadow:0 2px 5px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.9);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.toggle:checked{background:linear-gradient(135deg,#15d8ff,#376dff,#a050ff)!important;box-shadow:0 0 16px rgba(35,197,255,.38),inset 0 1px rgba(255,255,255,.35)!important}.toggle:checked::after{transform:translateX(24px)}
+body.nx-style-comic3d .flutter-btn,body.nx-style-comic3d .btn_login,body.nx-style-comic3d .btn_get_key,body.nx-style-comic3d .m_btn,body.nx-style-comic3d .contact_btn,body.nx-style-comic3d .icon_btn,body.nx-style-comic3d .style_choice,body.nx-style-comic3d .v33_btn{border:3px solid #111!important;border-radius:7px!important;box-shadow:5px 6px 0 #111,0 0 16px rgba(0,234,255,.18)!important;background:linear-gradient(145deg,#13d8ff,#f7f7f7)!important;color:#111!important;backdrop-filter:none;-webkit-backdrop-filter:none}body.nx-style-comic3d .toggle{border:3px solid #111!important;background:#fff!important;box-shadow:3px 3px 0 #111!important}body.nx-style-comic3d .toggle:checked{background:#ffd400!important}
+body.nx-style-white .flutter-btn,body.nx-style-white .btn_login,body.nx-style-white .btn_get_key,body.nx-style-white .m_btn,body.nx-style-white .contact_btn,body.nx-style-white .icon_btn,body.nx-style-white .v33_btn{color:#12202e;background:linear-gradient(135deg,rgba(255,255,255,.68),rgba(205,239,255,.35)),linear-gradient(135deg,rgba(27,190,255,.35),rgba(105,113,255,.20));border-color:rgba(40,100,135,.28)}
+body.nx-style-black .flutter-btn,body.nx-style-black .btn_login,body.nx-style-black .btn_get_key,body.nx-style-black .m_btn,body.nx-style-black .contact_btn,body.nx-style-black .icon_btn,body.nx-style-black .v33_btn{color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(0,0,0,.25));border-color:rgba(146,226,255,.3)}
+</style>
 </head>
 <body data-nexus-version="3.2" data-build="github-gateway">
     <div id="nx_boot_loader" aria-label="Loading Nexus-X"><div class="loader"><span></span></div><div class="loader_text">Connecting</div></div>
@@ -9448,5 +9463,6 @@ Ketik help untuk bantuan.
 </script>
 <!-- NEXUS_V33_FULL_MODULES_START -->
 <!-- NEXUS_V33_SENSI_PAGE_START -->
+/* NEXUS_V33_ALL_BUTTONS_START */
 </body>
 </html>
