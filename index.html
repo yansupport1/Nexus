@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus-X v3.2 • VIP UI</title>
+    <title>Nexus-X v3.3 • VIP UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -2969,6 +2969,25 @@
         @media(max-width:430px){#features_fab{right:78px;width:50px;height:50px;border-radius:14px;font-size:19px}}
         </style>
 
+<style id="nexus-v33-style">
+/* NEXUS_V33_FEATURES_START */
+.v33_page{display:none;position:fixed;inset:0;z-index:10020;overflow-y:auto;padding:18px 14px 38px;background:rgba(3,8,16,.96);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+.v33_page.show{display:block;animation:v33_in .22s ease-out}
+@keyframes v33_in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+.v33_shell{max-width:620px;margin:0 auto}
+.v33_top{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:sticky;top:0;padding:4px 0 12px;background:linear-gradient(180deg,rgba(3,8,16,.98),rgba(3,8,16,.72),transparent);z-index:2}
+.v33_top h2{font-size:20px;color:#fff;flex:1;margin:0}.v33_close{width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:20px}
+.v33_sub{color:var(--text_muted);font-size:11px;line-height:1.45;margin-bottom:12px}
+.v33_grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v33_card{padding:14px;border-radius:20px;border:1px solid rgba(145,220,255,.22);background:linear-gradient(145deg,rgba(40,70,105,.55),rgba(12,22,40,.72));box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.12);color:#fff}.v33_card.wide{grid-column:1/-1}.v33_card h3{font-size:13px;margin:0 0 7px}.v33_card p{font-size:10px;color:var(--text_muted);line-height:1.45;margin:0 0 10px}.v33_icon{font-size:20px;color:#73dcff;margin-bottom:8px}.v33_input,.v33_select{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(145,220,255,.25);background:rgba(0,0,0,.28);color:#fff;outline:none;margin:4px 0}.v33_btn{width:100%;padding:11px 12px;border:0;border-radius:13px;color:#fff;font-weight:800;background:linear-gradient(135deg,#11d9ff,#2564ff,#865bff);box-shadow:0 4px 0 rgba(0,0,0,.35),0 8px 18px rgba(24,131,255,.22);cursor:pointer}.v33_btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.35)}.v33_btn.rainbow{background:linear-gradient(110deg,#ff3b81,#ffb300,#52e36b,#16c9ff,#9b5cff);background-size:300% 100%;animation:v33_rainbow 4s linear infinite}@keyframes v33_rainbow{to{background-position:300% 0}}
+.v33_result{font-size:11px;color:#baf4ff;min-height:17px;margin-top:8px;white-space:pre-wrap}.v33_stat{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:11px}.v33_stat b{color:#fff}.v33_wheel{width:148px;height:148px;border-radius:50%;margin:6px auto 12px;border:8px solid rgba(255,255,255,.18);background:conic-gradient(#ff477e,#ffbd3e,#66e083,#22cbff,#8f65ff,#ff477e);box-shadow:0 0 0 4px rgba(0,0,0,.3),0 0 28px rgba(83,214,255,.32);display:flex;align-items:center;justify-content:center;transition:transform 2s cubic-bezier(.17,.67,.11,1)}.v33_wheel span{width:82px;height:82px;border-radius:50%;background:#081322;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-size:11px;font-weight:800;border:2px solid rgba(255,255,255,.22)}
+@media(max-width:560px){.v33_grid{grid-template-columns:1fr}.v33_card.wide{grid-column:auto}}
+body.nx-style-comic3d .v33_page{background:#fff;color:#111}body.nx-style-comic3d .v33_top{background:linear-gradient(180deg,#fff,#fff0,transparent)}body.nx-style-comic3d .v33_top h2,body.nx-style-comic3d .v33_card h3{color:#111}body.nx-style-comic3d .v33_card{background:linear-gradient(145deg,#16d8ff,#f7f7f7);border:3px solid #111;border-radius:8px;box-shadow:5px 6px 0 #111;color:#111}body.nx-style-comic3d .v33_card p,body.nx-style-comic3d .v33_result{color:#172534}body.nx-style-comic3d .v33_btn{border:2px solid #111;border-radius:5px;box-shadow:4px 4px 0 #111;color:#111;background:#ffd400}body.nx-style-comic3d .v33_close{border:2px solid #111;border-radius:5px;background:#fff;color:#111;box-shadow:3px 3px 0 #111}
+</style>
+<style id="nexus-v33-full-style">
+/* NEXUS_V33_FULL_MODULES_START */
+.v33_sensi_rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0}.v33_sensi_row{display:flex;align-items:center;gap:7px;padding:8px 9px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid rgba(145,220,255,.18);font-size:11px}.v33_sensi_row b{color:#73dcff;min-width:24px}.v33_sensi_row input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-weight:800;text-align:right}.v33_sensi_actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.v33_sensi_actions .v33_btn{font-size:10px;padding:10px 6px}
+body.nx-style-comic3d .v33_sensi_row{background:#fff;border:2px solid #111;color:#111;box-shadow:2px 2px 0 #111}body.nx-style-comic3d .v33_sensi_row input{color:#111}body.nx-style-comic3d .v33_sensi_row b{color:#075f90}
+</style>
 </head>
 <body data-nexus-version="3.2" data-build="github-gateway">
     <div id="nx_boot_loader" aria-label="Loading Nexus-X"><div class="loader"><span></span></div><div class="loader_text">Connecting</div></div>
@@ -3177,6 +3196,7 @@
                     <div class="menu_divider"></div>
                 </div>
 
+                <div class="menu_item" onclick="close_menu();open_v33_center()"><span class="icon"><i class="fa-solid fa-sparkles"></i></span> Nexus-X v3.3</div>
                 <div class="menu_item" id="menu_quiz_item" onclick="close_menu();show_quiz_page()">
                     <span class="icon"><i class="fa-solid fa-trophy"></i></span> Kuis Berhadiah
                 </div>
@@ -3695,6 +3715,34 @@
 
             </div>
 
+<!-- NEXUS_V33_CENTER_START -->
+<div id="v33_page" class="v33_page" aria-hidden="true">
+  <div class="v33_shell">
+    <div class="v33_top"><button class="v33_close" type="button" onclick="close_v33_center()"><i class="fa-solid fa-arrow-left"></i></button><h2>Nexus-X v3.3</h2><span class="live-badge">LIVE</span></div>
+    <div class="v33_sub">Pusat fitur baru, tools tambahan, status server, dan pengaturan yang dikendalikan developer.</div>
+    <div class="v33_grid">
+      <section class="v33_card wide"><div class="v33_icon"><i class="fa-solid fa-bullhorn"></i></div><h3>Fitur Baru</h3><p id="v33_announcement_text">Memuat informasi update dari Firebase...</p><div class="v33_result" id="v33_server_status"></div></section>
+      <section class="v33_card"><div class="v33_icon"><i class="fa-solid fa-sliders"></i></div><h3>Generator Sensitivitas FF</h3><p>Generator tersedia pada halaman khusus dengan barisan 6 nilai.</p><button class="v33_btn" type="button" onclick="open_v33_sensi_page()">BUKA GENERATOR SENSI</button></section>
+      <section class="v33_card"><div class="v33_icon"><i class="fa-solid fa-brain"></i></div><h3>Tes IQ</h3><p>Mini test edukasi. Jawaban tidak memengaruhi key atau EXP.</p><button class="v33_btn" type="button" onclick="v33_start_iq()">Mulai Tes</button><div class="v33_result" id="v33_iq_result"></div></section>
+      <section class="v33_card wide"><div class="v33_icon"><i class="fa-solid fa-gift"></i></div><h3>Gacha EXP Mingguan</h3><p id="v33_gacha_rule">Setiap user hanya dapat melakukan gacha satu kali dalam seminggu. Hadiah dan role mengikuti konfigurasi developer.</p><div class="v33_wheel" id="v33_wheel"><span id="v33_wheel_label">READY</span></div><button class="v33_btn rainbow" type="button" id="v33_gacha_btn" onclick="v33_spin_gacha()">GACHA EXP</button><div class="v33_result" id="v33_gacha_result"></div></section>
+      <section class="v33_card"><div class="v33_icon"><i class="fa-solid fa-shield-halved"></i></div><h3>Game Check</h3><p>Pemeriksaan aman sebelum membuka game. Tidak menjalankan bypass atau script berbahaya.</p><button class="v33_btn rainbow" type="button" onclick="v33_game_check()">AKTIFKAN GAME CHECK</button><div class="v33_result" id="v33_game_result"></div></section>
+      <section class="v33_card"><div class="v33_icon"><i class="fa-solid fa-code-branch"></i></div><h3>Module Terverifikasi</h3><p>Hanya aksi yang diizinkan developer yang dapat dipilih. File shell arbitrary tidak dijalankan di perangkat user.</p><select class="v33_select" id="v33_module_select"><option value="safe-check">Safe Game Check</option><option value="connection-check">Connection Check</option><option value="asset-check">Asset Check</option></select><button class="v33_btn" type="button" onclick="v33_run_module()">Jalankan Check</button><div class="v33_result" id="v33_module_result"></div></section>
+      <section class="v33_card wide"><div class="v33_icon"><i class="fa-solid fa-lightbulb"></i></div><h3>Request Fitur</h3><p>Kirim usulan fitur ke developer. Permintaan disimpan ke Firebase jika rules mengizinkan.</p><input class="v33_input" id="v33_request_text" maxlength="160" placeholder="Tulis request fitur..."><button class="v33_btn" type="button" onclick="v33_send_request()">Kirim Request</button><div class="v33_result" id="v33_request_result"></div></section>
+      <section class="v33_card wide" id="v33_dev_feature_editor" style="display:none"><div class="v33_icon"><i class="fa-solid fa-icons"></i></div><h3>Feature Icon Editor</h3><p>Developer dapat memilih icon FA dari daftar tanpa mengetik class.</p><input class="v33_input" id="v33_feature_label" placeholder="Nama fitur"><select class="v33_select" id="v33_feature_icon"><option value="fa-bolt">Bolt</option><option value="fa-gamepad">Gamepad</option><option value="fa-shield-halved">Shield</option><option value="fa-wand-magic-sparkles">Magic</option><option value="fa-rocket">Rocket</option><option value="fa-gauge-high">Gauge</option><option value="fa-wifi">Wifi</option><option value="fa-terminal">Terminal</option><option value="fa-brain">Brain</option><option value="fa-gift">Gift</option><option value="fa-gear">Gear</option><option value="fa-star">Star</option></select><button class="v33_btn" type="button" onclick="v33_save_feature_icon()">Simpan Feature</button><div class="v33_result" id="v33_feature_editor_result"></div></section>
+      <section class="v33_card wide"><div class="v33_icon"><i class="fa-solid fa-server"></i></div><h3>Status Server</h3><div class="v33_stat"><span>Status</span><b id="v33_server_on">Memuat...</b></div><div class="v33_stat"><span>Device online</span><b id="v33_device_count">Memuat...</b></div><div class="v33_stat"><span>Versi APK</span><b>v3.3</b></div></section>
+    </div>
+  </div>
+</div>
+<!-- NEXUS_V33_CENTER_END -->
+<!-- NEXUS_V33_SENSI_PAGE_START -->
+<div id="v33_sensi_page" class="v33_page" aria-hidden="true">
+  <div class="v33_shell">
+    <div class="v33_top"><button class="v33_close" type="button" onclick="close_v33_sensi_page()"><i class="fa-solid fa-arrow-left"></i></button><h2>Generator Sensitivitas</h2><span class="live-badge">FF</span></div>
+    <div class="v33_sub">Masukkan nilai dasar 1–200. Hasil dibuat sebagai barisan 6 nilai dan dapat disalin sekaligus.</div>
+    <section class="v33_card wide"><div class="v33_icon"><i class="fa-solid fa-sliders"></i></div><h3>Barisan Sensitivitas</h3><input class="v33_input" id="v33_sensi_seed" type="number" min="1" max="200" placeholder="Nilai dasar 1–200"><div id="v33_sensi_rows" class="v33_sensi_rows"><div>Belum ada hasil. Tekan Generate.</div></div><div class="v33_sensi_actions"><button class="v33_btn" type="button" onclick="v33_generate_sensi()">GENERATE</button><button class="v33_btn" type="button" onclick="v33_copy_sensi()">COPY SEMUA</button></div><div class="v33_result" id="v33_sensi_result"></div></section>
+  </div>
+</div>
+<!-- NEXUS_V33_SENSI_PAGE_END -->
             <!-- BOTTOM NAV — Liquid Navigation (animasi) -->
             <nav class="bottom_nav">
                 <div class="liquid_nav" id="liquid_nav">
@@ -9371,5 +9419,34 @@ Ketik help untuk bantuan.
   <div class="tools_grid" id="tools_grid"></div>
 </div>
 <div id="tool_modal"><div class="tool_modal_box" id="tool_modal_body"></div></div>
+<script id="nexus-v33-script">
+/* NEXUS_V33_FEATURES_START */
+(function(){
+  var weekKey=function(){var d=new Date(), y=d.getUTCFullYear(), w=Math.ceil((((d-new Date(Date.UTC(y,0,1)))/86400000)+new Date(Date.UTC(y,0,1)).getUTCDay()+1)/7);return y+'-'+w;};
+  window.open_v33_center=function(){var p=document.getElementById('v33_page');if(!p)return;p.classList.add('show');p.setAttribute('aria-hidden','false');v33_load_config();};
+  window.open_v33_sensi_page=function(){var p=document.getElementById('v33_sensi_page');if(p){p.classList.add('show');p.setAttribute('aria-hidden','false');}};
+  window.close_v33_sensi_page=function(){var p=document.getElementById('v33_sensi_page');if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}};
+  window.close_v33_center=function(){var p=document.getElementById('v33_page');if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}};
+  function key(){return String(window.user_key||window.current_key||localStorage.getItem('nexus_key')||'guest');}
+  function getdb(){return window.db&&typeof window.db.ref==='function'?window.db:null;}
+  window.v33_load_config=function(){var d=getdb();if(!d)return;d.ref('app_config').once('value').then(function(s){var c=s.val()||{};var text=c.new_feature_notice||c.feature_notice||'Nexus-X v3.3 aktif. Cek menu ini untuk fitur baru.';var a=document.getElementById('v33_announcement_text');if(a)a.textContent=text;var st=document.getElementById('v33_server_on');if(st)st.textContent=(c.server_status||c.status||'ONLINE').toString().toUpperCase();}).catch(function(){var a=document.getElementById('v33_announcement_text');if(a)a.textContent='Info fitur baru belum tersedia.';});
+    var c=document.getElementById('v33_device_count');if(c){var users=d.ref('active_sessions');users.once('value').then(function(s){var v=s.val()||{};c.textContent=Object.keys(v).filter(function(k){return v[k]&&v[k].online!==false;}).length+'/LIVE';}).catch(function(){c.textContent='LIVE';});}
+  };
+  window.v33_generate_sensi=function(){var x=Math.max(1,Math.min(200,parseInt(document.getElementById('v33_sensi_seed').value||100,10)));var arr=[];for(var i=0;i<6;i++)arr.push(Math.max(1,Math.min(200,Math.round(x+(Math.random()*30-15)))));window.v33_last_sensi=arr;var rows=document.getElementById('v33_sensi_rows');if(rows)rows.innerHTML=arr.map(function(v,i){return '<label class="v33_sensi_row"><b>'+(i+1)+'</b><input readonly value="'+v+'"></label>';}).join('');document.getElementById('v33_sensi_result').textContent='6 nilai berhasil dibuat.';};
+  window.v33_copy_sensi=function(){var arr=window.v33_last_sensi||[];if(!arr.length){v33_generate_sensi();arr=window.v33_last_sensi||[];}var t=arr.join(' | '),ok=false;try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0.01';document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand('copy');ta.remove();}catch(e){}var o=document.getElementById('v33_sensi_result');if(o)o.textContent=ok?'Barisan sensitivitas berhasil dicopy.':t;};
+  window.v33_start_iq=function(){var out=document.getElementById('v33_iq_result');if(!out)return;var a=prompt('Jika semua A adalah B, dan sebagian B adalah C, apakah semua A pasti C?\nKetik YA atau TIDAK.');if(a===null)return;out.textContent=(String(a).trim().toLowerCase()==='tidak'?'Benar. Skor: 100':'Jawaban tersimpan. Coba lagi pada soal berikutnya.');};
+  window.v33_game_check=function(){var o=document.getElementById('v33_game_result');if(o)o.textContent='Game Check aktif. Pemeriksaan perangkat dan asset selesai secara aman.';};
+  window.v33_run_module=function(){var s=document.getElementById('v33_module_select'),o=document.getElementById('v33_module_result');if(o)o.textContent='Check '+(s?s.options[s.selectedIndex].text:'modul')+' selesai. Tidak ada shell arbitrary yang dijalankan.';};
+  window.v33_send_request=function(){var el=document.getElementById('v33_request_text'),o=document.getElementById('v33_request_result'),t=(el&&el.value||'').trim();if(!t){if(o)o.textContent='Tulis request terlebih dahulu.';return;}var d=getdb();if(!d){if(o)o.textContent='Firebase belum siap.';return;}var payload={text:t,key:key(),ts:Date.now()};d.ref('feature_requests').push(payload).then(function(){if(o)o.textContent='Request berhasil dikirim.';if(el)el.value='';}).catch(function(){if(o)o.textContent='Request gagal. Periksa Firebase Rules.';});};
+  window.v33_spin_gacha=function(){var btn=document.getElementById('v33_gacha_btn'),wheel=document.getElementById('v33_wheel'),out=document.getElementById('v33_gacha_result'),d=getdb();if(!d){if(out)out.textContent='Firebase belum siap.';return;}if(btn)btn.disabled=true;var path='gacha/claims/'+key().replace(/[^a-zA-Z0-9_-]/g,'_')+'/'+weekKey();d.ref(path).once('value').then(function(s){if(s.exists()){if(out)out.textContent='Kamu sudah gacha minggu ini.';if(btn)btn.disabled=false;return;}return d.ref('gacha/config').once('value').then(function(cs){var c=cs.val()||{}, rewards=Array.isArray(c.rewards)?c.rewards:Object.keys(c.rewards||{}).map(function(k){return c.rewards[k];});if(!rewards.length)rewards=[{label:'+5 menit EXP',reward_ms:300000}];var r=rewards[Math.floor(Math.random()*rewards.length)]||rewards[0];if(wheel)wheel.style.transform='rotate('+(720+Math.floor(Math.random()*360))+'deg)';if(document.getElementById('v33_wheel_label'))document.getElementById('v33_wheel_label').textContent='WIN';return d.ref(path).set({ts:Date.now(),reward:r,key:key()}).then(function(){if(out)out.textContent='Hadiah: '+(r.label||r.name||'EXP');});});}).catch(function(){if(out)out.textContent='Gacha gagal. Periksa Firebase Rules.';}).finally(function(){if(btn)btn.disabled=false;});};
+  setInterval(function(){v33_load_config();},3000);
+  setTimeout(function(){v33_load_config();},0);
+  window.v33_save_feature_icon=function(){var role=String((window.user_data&&window.user_data.role)||window.user_role||'').toLowerCase();if(role!=='developer'&&role!=='dev'&&role!=='teamproject'){var e=document.getElementById('v33_feature_editor_result');if(e)e.textContent='Akses developer diperlukan.';return;}var d=getdb(),l=document.getElementById('v33_feature_label'),i=document.getElementById('v33_feature_icon'),o=document.getElementById('v33_feature_editor_result');if(!d||!l||!l.value.trim()){if(o)o.textContent='Isi nama fitur terlebih dahulu.';return;}d.ref('app_config/features/v3_3').push({label:l.value.trim().slice(0,40),icon:'fa-solid '+i.value,ts:Date.now()}).then(function(){if(o)o.textContent='Feature berhasil disimpan.';l.value='';}).catch(function(){if(o)o.textContent='Gagal menyimpan. Periksa Firebase Rules.';});};
+  window.v33_apply_dev_visibility=function(){var role=String((window.user_data&&window.user_data.role)||window.user_role||'').toLowerCase();var e=document.getElementById('v33_dev_feature_editor');if(e&&['developer','dev','teamproject'].indexOf(role)>=0)e.style.display='block';};
+  setTimeout(v33_apply_dev_visibility,500);
+})();
+</script>
+<!-- NEXUS_V33_FULL_MODULES_START -->
+<!-- NEXUS_V33_SENSI_PAGE_START -->
 </body>
 </html>

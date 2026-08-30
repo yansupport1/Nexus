@@ -1,6 +1,6 @@
 {
   "app": "Nexus-X",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "source_url": "https://raw.githubusercontent.com/yansupport1/Nexus/main/index.html",
   "assets_base": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets",
   "telegram_api_url": "",
@@ -15,13 +15,6 @@
     "fon.ttf": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/fon.ttf",
     "logo.png": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/logo.png"
   },
-  "market": {
-    "service": "coinpaprika",
-    "base_url": "https://api.coinpaprika.com/v1",
-    "vs_currency": "USD",
-    "refresh_seconds": 30,
-    "allow_trading": false
-  },
   "telegram": {
     "events": [
       "new_user",
@@ -30,5 +23,17 @@
     ],
     "token_in_client": false,
     "chat_id_in_client": false
+  },
+  "features": {
+    "v3_3": [
+      "new_feature_notice",
+      "sensitivity_generator",
+      "weekly_gacha",
+      "iq_test",
+      "feature_request",
+      "safe_game_check",
+      "server_status",
+      "responsive_liquid_glass"
+    ]
   }
 }
