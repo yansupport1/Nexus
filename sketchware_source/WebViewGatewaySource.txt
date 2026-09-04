@@ -33,8 +33,28 @@ new Object() {
                 in.close();
                 org.json.JSONObject cfg = new org.json.JSONObject(out.toString("UTF-8"));
                 String source = cfg.optString("source_url", "");
-                if (source.length() > 0) web.loadUrl(source);
-                else web.loadDataWithBaseURL(null, "<h3>Gateway source_url belum diisi</h3>", "text/html", "UTF-8", null);
+                if (source.length() > 0) {
+                    final String remoteSource = source;
+                    new Thread(new Runnable() { public void run() {
+                        try {
+                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection)new java.net.URL(remoteSource).openConnection();
+                            conn.setConnectTimeout(15000); conn.setReadTimeout(20000); conn.setRequestProperty("Accept", "text/html");
+                            java.io.InputStream rin = conn.getInputStream();
+                            java.io.ByteArrayOutputStream rout = new java.io.ByteArrayOutputStream();
+                            byte[] rbuf = new byte[8192]; int rn;
+                            while ((rn = rin.read(rbuf)) != -1) rout.write(rbuf, 0, rn);
+                            rin.close(); conn.disconnect();
+                            final String html = rout.toString("UTF-8");
+                            web.post(new Runnable() { public void run() {
+                                web.loadDataWithBaseURL(remoteSource, html, "text/html", "UTF-8", remoteSource);
+                            }});
+                        } catch (Exception ex) {
+                            web.post(new Runnable() { public void run() {
+                                web.loadDataWithBaseURL(remoteSource, "<h3>Source GitHub gagal dimuat</h3><p>Periksa URL repository atau koneksi internet.</p>", "text/html", "UTF-8", remoteSource);
+                            }});
+                        }
+                    }}).start();
+                } else web.loadDataWithBaseURL(null, "<h3>Gateway source_url belum diisi</h3>", "text/html", "UTF-8", null);
             } catch (Exception e) {
                 web.loadDataWithBaseURL(null, "<h3>file.json tidak valid</h3>", "text/html", "UTF-8", null);
             }
