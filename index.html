@@ -3177,7 +3177,7 @@ button:active,.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:a
                     <div class="login_title">Welcome <span>Back.</span></div>
                     <div class="login_sub" id="login_sub">Masukkan key untuk menyalakan akses Nexus-X.</div>
                     <div class="login_online"><span class="dot"></span> <span id="online_count">0</span> user online</div>
-                    <div class="lamp_key_label"><i class="fa-solid fa-key"></i> FIREBASE KEY</div>
+                    <div class="lamp_key_label"><i class="fa-solid fa-key"></i> VALID KEY</div>
                     <div class="input_wrap lamp_key_wrap"><i class="fa-solid fa-key"></i><input type="password" id="key_input" placeholder="Masukkan key valid" autocomplete="off" autocapitalize="characters" style="padding-right:72px;"><button type="button" class="btn_paste" onclick="pasteKey()">Paste</button></div>
                     <div class="login_session_hint" id="login_session_hint" style="display:none;"><i class="fa-solid fa-shield-check"></i> Key tersimpan. Tetap klik <b>Masuk</b> untuk verifikasi ulang.</div>
                     <button class="btn_login lamp_signin_btn" id="login_btn" onclick="do_login()"><i class="fa-solid fa-power-off"></i> AKTIFKAN AKSES <span>→</span></button>
@@ -8995,9 +8995,9 @@ function approvePurchase(id) {
 
 function openGetKey() {
             try {
-                window.open(window.NX_GETKEY_URL || 'https://getkeybos1-free.netlify.app/', '_blank');
+                window.open(window.NX_GETKEY_URL || 'https://getkey-vip.vercel.app', '_blank');
             } catch (e) {
-                window.location.href = window.NX_GETKEY_URL || 'https://getkeybos1-free.netlify.app/';
+                window.location.href = window.NX_GETKEY_URL || 'https://getkey-vip.vercel.app';
             }
         }
 
