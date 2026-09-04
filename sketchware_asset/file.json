@@ -1,19 +1,19 @@
 {
   "app": "Nexus-X",
   "version": "3.3.0",
-  "source_url": "https://raw.githubusercontent.com/yansupport1/Nexus/main/index.html",
-  "assets_base": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets",
+  "source_url": "https://raw.githack.com/yansupport1/Nexus/main/index.html",
+  "assets_base": "https://raw.githack.com/yansupport1/Nexus/main/assets",
   "telegram_api_url": "",
   "getkey_url": "",
   "assets": {
-    "card.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/card.mp4",
-    "box.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/box.mp4",
-    "start.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/start.mp4",
-    "background.mp4": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/background.mp4",
-    "start.mp3": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/start.mp3",
-    "musik.mp3": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/musik.mp3",
-    "fon.ttf": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/fon.ttf",
-    "logo.png": "https://cdn.jsdelivr.net/gh/yansupport1/Nexus@main/assets/logo.png"
+    "card.mp4": "https://raw.githack.com/yansupport1/Nexus/main/assets/card.mp4",
+    "box.mp4": "https://raw.githack.com/yansupport1/Nexus/main/assets/box.mp4",
+    "start.mp4": "https://raw.githack.com/yansupport1/Nexus/main/assets/start.mp4",
+    "background.mp4": "https://raw.githack.com/yansupport1/Nexus/main/assets/background.mp4",
+    "start.mp3": "https://raw.githack.com/yansupport1/Nexus/main/assets/start.mp3",
+    "musik.mp3": "https://raw.githack.com/yansupport1/Nexus/main/assets/musik.mp3",
+    "fon.ttf": "https://raw.githack.com/yansupport1/Nexus/main/assets/fon.ttf",
+    "logo.png": "https://raw.githack.com/yansupport1/Nexus/main/assets/logo.png"
   },
   "telegram": {
     "events": [
@@ -35,5 +35,6 @@
       "server_status",
       "responsive_liquid_glass"
     ]
-  }
+  },
+  "web_source_url": "https://raw.githack.com/yansupport1/Nexus/main/index.html"
 }
