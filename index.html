@@ -2950,7 +2950,7 @@
         #developer_ad_overlay { position:fixed; inset:0; z-index:1000001; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.72); backdrop-filter:blur(16px); }
         #developer_ad_overlay.show { display:flex; animation:fade_in_scale .25s ease; }
         .developer_ad_card { position:relative; width:min(100%,390px); overflow:hidden; border:1px solid rgba(0,234,255,.36); border-radius:22px; background:linear-gradient(145deg,rgba(18,29,48,.98),rgba(11,15,28,.98)); box-shadow:0 25px 80px rgba(0,0,0,.55),0 0 35px rgba(0,234,255,.11); }
-        .developer_ad_card img { display:block; width:100%; max-height:260px; object-fit:cover; background:#080c16; }
+        .developer_ad_card img { display:block; width:100%; height:auto; max-height:72vh; object-fit:contain; object-position:center; background:transparent; }
         .developer_ad_body { padding:16px; }
         .developer_ad_label { color:#00eaff; font-size:10px; font-weight:900; letter-spacing:2px; }
         .developer_ad_title { margin:7px 0 6px; color:#fff; font-size:19px; font-weight:900; }
@@ -3952,7 +3952,7 @@ button:active,.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:a
         }};
         // v3.2 version contract: developer controls min_supported_version/disabled_versions in app_config.
         setTimeout(function(){ try { db.ref('app_config').once('value').then(function(s){ if(typeof enforce_v32_version_gate==='function') enforce_v32_version_gate(s.val()||{}); }); } catch(e) {} }, 1200);
-        setTimeout(function(){ try { if(typeof load_developer_ad_popup==='function') load_developer_ad_popup(false); } catch(e) {} }, 6500);
+        setTimeout(function(){ try { if(typeof load_developer_ad_popup==='function') load_developer_ad_popup(true); } catch(e) {} }, 900);
 
         // ============================================================
         // VARIABLES
@@ -6340,7 +6340,7 @@ button:active,.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:a
             render_keys();
             render_del_features();
             show_home();
-            setTimeout(function(){ load_developer_ad_popup(false); }, 700);
+            setTimeout(function(){ load_developer_ad_popup(true); }, 700);
 
             if (update_available) {
                 document.getElementById('update_badge').classList.remove('hidden');
@@ -6508,7 +6508,7 @@ button:active,.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:a
                 if(ad.starts_at && now<Number(ad.starts_at)) return;
                 if(ad.expires_at && now>Number(ad.expires_at)) return;
                 var id=String(ad.id||ad.updated_at||ad.image_url||ad.title||'default');
-                if(!forceShow && localStorage.getItem('nx_ad_closed_'+id)==='1') return;
+                if(!forceShow && sessionStorage.getItem('nx_ad_closed_'+id)==='1') return;
                 var overlay=document.getElementById('developer_ad_overlay'); if(!overlay) return;
                 var img=document.getElementById('developer_ad_image'); if(img){ img.src=ad.image_url||ad.image||''; img.onerror=function(){overlay.classList.remove('show');}; }
                 var t=document.getElementById('developer_ad_title'); if(t)t.textContent=ad.title||'Informasi Developer';
@@ -6520,7 +6520,7 @@ button:active,.flutter-btn:active,.btn_login:active,.btn_get_key:active,.m_btn:a
         }
         function close_developer_ad(){
             var overlay=document.getElementById('developer_ad_overlay'); if(!overlay)return;
-            try{localStorage.setItem('nx_ad_closed_'+(overlay.dataset.adId||'default'),'1')}catch(e){}
+            try{sessionStorage.setItem('nx_ad_closed_'+(overlay.dataset.adId||'default'),'1')}catch(e){}
             overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true');
         }
         function save_version_gate_v32(){
