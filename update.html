@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sedang Update</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow:hidden;
+    position:relative;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .stars {
+    position:absolute;
+    inset:0;
+    background-image:
+      radial-gradient(2px 2px at 20px 30px, white, transparent),
+      radial-gradient(2px 2px at 90px 80px, white, transparent),
+      radial-gradient(1.5px 1.5px at 150px 40px, white, transparent),
+      radial-gradient(1.5px 1.5px at 250px 120px, white, transparent),
+      radial-gradient(2px 2px at 320px 60px, white, transparent),
+      radial-gradient(1.5px 1.5px at 400px 200px, white, transparent);
+    background-repeat: repeat;
+    background-size: 450px 250px;
+    opacity:0.4;
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    0% { opacity:0.2; }
+    100% { opacity:0.6; }
+  }
+
+  .card {
+    position:relative;
+    z-index:2;
+    text-align:center;
+    color:#fff;
+    padding:50px 35px;
+    max-width:480px;
+    width:90%;
+  }
+
+  .gear-wrap {
+    position:relative;
+    width:110px;
+    height:110px;
+    margin:0 auto 30px;
+  }
+
+  .gear {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+    animation: spin 4s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(120,120,255,0.7));
+  }
+
+  .gear.small {
+    width:55px;
+    height:55px;
+    right:-18px;
+    bottom:-10px;
+    font-size:32px;
+    animation: spinRev 3s linear infinite;
+  }
+
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes spinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+  h1 {
+    font-size: clamp(24px, 5vw, 34px);
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399, #a78bfa);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 4s linear infinite;
+    margin-bottom:14px;
+  }
+
+  @keyframes shine {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  p.desc {
+    color: #c7c9e0;
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:30px;
+  }
+
+  .dots span {
+    display:inline-block;
+    width:8px;
+    height:8px;
+    margin:0 4px;
+    border-radius:50%;
+    background:#8b8fd8;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity:0.5; }
+    40% { transform: translateY(-10px); opacity:1; }
+  }
+
+  .progress-bar {
+    width:100%;
+    height:6px;
+    background: rgba(255,255,255,0.1);
+    border-radius:10px;
+    overflow:hidden;
+    margin:26px 0 34px;
+  }
+
+  .progress-fill {
+    height:100%;
+    width:40%;
+    border-radius:10px;
+    background: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa);
+    background-size: 200% 100%;
+    animation: loadMove 2.2s ease-in-out infinite, colorMove 3s linear infinite;
+  }
+
+  @keyframes loadMove {
+    0% { width:10%; }
+    50% { width:75%; }
+    100% { width:10%; }
+  }
+  @keyframes colorMove {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .wa-button {
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    font-size:16px;
+    padding:14px 30px;
+    border-radius:50px;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+
+  .wa-button:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.55);
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  }
+
+  .wa-button svg { width:22px; height:22px; }
+
+  footer {
+    margin-top:26px;
+    font-size:12px;
+    color:#6b6f9a;
+  }
+</style>
+</head>
+<body>
+
+  <div class="stars"></div>
+
+  <div class="card">
+    <div class="gear-wrap">
+      <div class="gear">⚙️</div>
+      <div class="gear small">⚙️</div>
+    </div>
+
+    <h1>Sedang Dalam Proses Update</h1>
+    <p class="desc">
+      Kami lagi kerja keras nyiapin sesuatu yang lebih keren buat kamu.
+      Pantau terus biar gak ketinggalan info update terbaru!
+    </p>
+
+    <div class="dots">
+      <span></span><span></span><span></span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <a class="wa-button" href="https://whatsapp.com/channel/0029VbD5W0GFMqrecO56Hq3a" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.38 1.26 4.79L2 22l5.44-1.43a9.9 9.9 0 0 0 4.6 1.14h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.3-1.63-.6-2.87-1.24-4.74-4.13-4.88-4.32-.14-.19-1.17-1.56-1.17-2.98 0-1.42.74-2.12 1-2.41.26-.29.57-.36.76-.36h.55c.18 0 .42-.03.65.5.24.56.82 1.93.89 2.07.07.14.11.3.02.49-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.93 1.23 2.2 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.8.85.26.13.44.19.5.3.07.11.07.63-.16 1.29z"/></svg>
+      Stay Tune for Update
+    </a>
+
+    <footer>© 2026 Yanz</footer>
+  </div>
+
+</body>
+</html>
